@@ -1,0 +1,21 @@
+.container {
+    width: 100%;
+    padding-bottom: 100px;
+    display: flex;
+    justify-content: center;
+
+    margin-top: var(--header-height);
+}
+
+.concentContainer {
+    display: flex;
+    margin-top: 10px;
+}
+
+.main {
+    margin-top: 50px;
+    width: 1280px;
+}
+
+
+/* 여기서 top, lfet, right 등을 각자 컴포넌트로 분리하자 */

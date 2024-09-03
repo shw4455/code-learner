@@ -1,0 +1,48 @@
+#chooseContainer {
+    width: 100%;
+    height: 65%;
+    display: flex;
+}
+
+.chooseFlexContainer {
+    width: 50%;
+    /* 기본값 */
+    height: auto;
+
+    display: flex;
+    /* 내부요소 수평 및 수직 가운데 정렬 */
+    align-items: center;
+    justify-content: center;
+}
+
+.chooseFlexContainer:hover {
+    cursor: pointer;
+}
+
+.chooseElementContainer {
+    width: 70%;
+    height: 70%;
+}
+
+.chooseElementContainer:hover {
+    transform: translateY(-10%);
+}
+
+.chooseIcon {
+    width: 100%;
+    height: 70%;
+    object-fit: contain;
+}
+
+.textContainer {
+    width: 100%;
+    height: 30%;
+
+    display: grid;
+    place-items: center;
+}
+
+.chooseText {
+    font-size: 2rem;
+    color: white;
+}

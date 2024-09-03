@@ -1,0 +1,72 @@
+  :root {
+    --header-height: 50px;
+    --footer-height: 50px;
+
+    --main-background-color: rgb(31 41 55);
+    --main-line-color: rgba(107 114 128 0.3);
+
+    --element-color-gray: rgb(55 65 81);
+    --element-color-gray-hover: rgb(75 85 99);
+    --element-color-blue: rgb(0 144 249);
+    --element-color-blue-hover: rgb(11 127 211);
+    background-color: rgb(220 220 220);
+    background-color: gainsboro;
+    background-color: palegoldenrod;
+    background-color: palegreen;
+    background-color: paleturquoise;
+
+    --browser-width: 1280px;
+    --browser-height: 100vh;
+    --font-color: white;
+
+    background-color: var(--main-background-color);
+    color: white;
+
+    --tag-sidebar-button-width : 20px;
+  }
+
+  * {
+    color: var(--font-color);
+    font-family: 'Noto Sans KR' sans-serif;
+  }
+
+  *:visited {
+    color: var(--font-color);
+  }
+
+  input {
+    border: none;
+    outline: none;
+    /* padding: 10px; */
+  }
+
+  input:focus {}
+
+  div {
+    /* border-radius: 10px;
+    border: 1px solid black; */
+  }
+
+  button {
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+
+  /* Chrome 및 Safari 스크롤바 스타일링 */
+  ::-webkit-scrollbar {
+    width: 15px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--element-color-gray-hover);
+    box-shadow: 0 0 10px rgba(0 0 0 0.2);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background-color: var(--main-background-color);
+  }
+
+  ::-webkit-scrollbar-track-piece {
+    background: var(--element-color-gray);
+  } 

@@ -1,0 +1,126 @@
+@import url('global-styles.css');
+
+#container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    /* 내부요소 수평 및 수직 가운데 정렬 */
+    justify-content: center;
+}
+
+.text {
+    text-align: center;
+    font-size: 2.5rem;
+}
+
+#elementContainer {
+    margin-top: 100px;
+    display: inline;
+    width: fit-content;
+    height: fit-content;
+}
+
+.element {
+    display: block;
+    width: 250px;
+    height: 50px;
+    margin-top: 10px;
+
+    border: none;
+    border-radius: 4px;
+
+    color: var(--font-color);
+    font-size: 1rem;
+
+    /* 이메일, 비밀번호 글자의 이격을 주기 위함 */
+    padding: 10px;
+}
+
+.loginElement {
+    display: block;
+    width: 250px;
+    height: 50px;
+    margin-top: 10px;
+
+    border: none;
+    border-radius: 4px;
+
+    color: black;
+    font-size: 1rem;
+
+    padding: 10px;
+    /* 사실, CSS 명시도 생각하면, 그냥 아래에 작성하고 추가하면, 나중에 작성된 CSS가 우선 적용되서 괜찮지만, 나중에 사사롭게 꼬일 수도 있으니, 중복된 부분이 많더라도 이렇게 따로 구분해주는게 하는게 더 안정성 높을듯 함  */
+}
+
+.inputElement {
+    border: none;
+    outline: none;
+}
+
+.inputElement:focus {
+    border: solid 1px #1a6dff;
+}
+
+.login {
+    background-color: var(--element-color-blue);
+}
+
+.naver {
+    background-color: #01c73c;
+}
+
+.naver:hover {
+    background-color: #00bb38;
+}
+
+.facebook {
+    background-color: #4469b0;
+}
+
+.facebook:hover {
+    background-color: #547dcb;
+}
+
+.github {
+    background-color: rgb(13, 17, 23);
+}
+
+.github:hover {
+    background-color: #171b21
+}
+
+.google {
+    background-color: white;
+    color: black;
+}
+
+
+.dividerLine {
+    margin: 1rem 0rem;
+    position: relative;
+    border: solid var(--main-line-color) 0px;
+    border-top-width: 1px;
+}
+
+.dividerText {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 3rem;
+    text-align: center;
+
+    background-color: var(--main-background-color);
+}
+
+#checkbox {
+    margin-top: 10px;
+    margin-left: 5px;
+    display: inline;
+}
+
+#checkingTextContainer {
+    margin-top: 10px;
+    display: grid;
+    place-items: center;
+}

@@ -1,0 +1,6 @@
+@import url('global-styles.css');
+
+.bodyContainer {
+    margin-top: var(--header-height);
+    min-height: calc(var(--browser-height) - var(--header-height) - var(--footer-height));
+}

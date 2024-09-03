@@ -1,0 +1,41 @@
+@import url('global-styles.css');
+
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200");
+
+.material-icons {
+    cursor: pointer;
+}
+
+.material-symbols-outlined {
+    color: rgb(156, 163, 175);
+    font-variation-settings: 'FILL' 0,
+        'wght' 100,
+        'GRAD' 0,
+        'opsz' 20
+}
+
+.icon-rotated {
+    transform: rotate(-180deg);
+    /* 브라우저 호환성을 위한 접두사 추가 */
+    /* webkit: Safari, Chrome, moz: Firefox, ms: Microsoft, o: Opera */
+    -webkit-transform: rotate(-180deg);
+    -moz-transform: rotate(-180deg);
+    -ms-transform: rotate(-180deg);
+    -o-transform: rotate(-180deg);
+}
+
+.gf-search-1:hover {
+    /* color: rgb(156, 163, 255); */
+    color: var(--element-color-blue);
+}
+
+.gf-search-2:hover {
+    /* color: rgb(156, 163, 255); */
+    color: var(--element-color-blue);
+}
+
+.gf-arrow-1 {
+    position: absolute;
+}
