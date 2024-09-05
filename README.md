@@ -1,3 +1,13 @@
+### 실행 방법
+
+code-learner\src에서 node server.js
+code-learner에서 npm start
+
+npm install
+npm install mysql2
+npm install cors
+npm install express
+
 ### 해야 할 일
 
 [x] footer 만들기

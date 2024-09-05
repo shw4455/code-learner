@@ -4,6 +4,7 @@ import Board from "./board";
 import Tag from "./tag";
 import Right from "./right";
 import Top from "./top";
+import Left from "./commponent/Left";
 
 function Main() {
     return (
@@ -11,7 +12,7 @@ function Main() {
             <div className={main.main}>
                 <Top></Top>
                 <div className={main.concentContainer}>
-                    <Tag></Tag>
+                    <Left></Left>
                     <Board></Board>
                     <Right></Right>
                 </div>

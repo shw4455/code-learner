@@ -17,5 +17,8 @@
     width: 1280px;
 }
 
+#leftContainer {
+    width: 15%;
+}
 
 /* 여기서 top, lfet, right 등을 각자 컴포넌트로 분리하자 */
