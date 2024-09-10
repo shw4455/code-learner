@@ -1,23 +1,38 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { HashRouter } from "react-router-dom";
+import { HashRouter, Route, Routes } from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
 import "./styles/normalize.css";
 import "./styles/global-styles.css";
 import "./styles/google-fonts.css";
+import Main from "./main";
+import Login from "./login";
+import Check from "./check";
+import NotFound from "./notFound";
+
 import Header from "./header";
 import Footer from "./footer";
 import Body from "./body";
+import Post from "./post";
+import Board from "./board";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <HashRouter>
-      <Header></Header>
-      <Body></Body>
-      <Footer></Footer>
-    </HashRouter>
-  </React.StrictMode>
+    <React.StrictMode>
+        <HashRouter>
+            <Header></Header>
+            <Routes>
+                <Route path="/" element={<Main />} />
+                <Route path="/check" element={<Check />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/notFound" element={<NotFound />} />
+                <Route path="/board" element={<Main />} />
+                <Route path="/board/post/?id=1" element={<Post />} />
+            </Routes>
+            <Post></Post>
+            <Footer></Footer>
+        </HashRouter>
+    </React.StrictMode>
 );
 
 reportWebVitals();
