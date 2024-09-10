@@ -1,4 +1,4 @@
-  :root {
+:root {
     --header-height: 50px;
     --footer-height: 50px;
 
@@ -22,36 +22,36 @@
     background-color: var(--main-background-color);
     color: white;
 
-    --tag-sidebar-button-width : 20px;
-  }
+    --tag-sidebar-button-width: 20px;
+}
 
-  * {
+* {
     color: var(--font-color);
     font-family: 'Noto Sans KR' sans-serif;
-  }
+}
 
-  *:visited {
+*:visited {
     color: var(--font-color);
-  }
+}
 
-  input {
+input {
     border: none;
     outline: none;
     /* padding: 10px; */
-  }
+}
 
-  input:focus {}
+input:focus {}
 
-  div {
+div {
     /* border-radius: 10px;
     border: 1px solid black; */
-  }
+}
 
-  button {
+button {
     border: none;
     background: none;
     cursor: pointer;
-  }
+}
 
 /* Chrome 및 Safari 스크롤바 스타일링 */
 
@@ -88,17 +88,17 @@ hr {
 /* Chrome 및 Safari 스크롤바 스타일링 */
 ::-webkit-scrollbar {
     width: 15px;
-  }
+}
 
-  ::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
     background-color: var(--element-color-gray-hover);
     box-shadow: 0 0 10px rgba(0 0 0 0.2);
-  }
+}
 
-  ::-webkit-scrollbar-corner {
+::-webkit-scrollbar-corner {
     background-color: var(--main-background-color);
-  }
+}
 
-  ::-webkit-scrollbar-track-piece {
+::-webkit-scrollbar-track-piece {
     background: var(--element-color-gray);
-  } 
+}

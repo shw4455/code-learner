@@ -5,7 +5,7 @@ import header from "./styles/header.module.css";
 function Header() {
     // Data for menu items and themes
     const menuItems = [
-        { label: "커뮤니티", to: "/" },
+        { label: "게시판", to: "/board" },
         { label: "체크", to: "check" },
         { label: "NotFound", to: "/notFound" },
     ];
