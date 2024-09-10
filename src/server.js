@@ -1,26 +1,31 @@
 const express = require("express");
 const mysql = require("mysql2");
+const cors = require("cors");
 
 const app = express();
-const port = 3000;
+const port = 3001;
 
 // MySQL 연결 설정
-const pool = mysql.createPool({
+const connection = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "1234",
     database: "code_learner_db",
 });
 
-// 데이터 가져오기 API 엔드포인트
+app.use(cors({ origin: "http://localhost:3000" }));
+
+// 데이터베이스 연결
+connection.connect((err) => {
+    if (err) throw err;
+    console.log("MySQL Connected...");
+});
+
+// 데이터 가져오기 API
 app.get("/api/data", (req, res) => {
-    pool.query("SELECT * FROM your_table", (err, results) => {
-        if (err) {
-            console.error(err);
-            res.status(500).send("Error retrieving data");
-        } else {
-            res.json(results);
-        }
+    connection.query("SELECT * FROM posts", (err, results) => {
+        if (err) throw err;
+        res.send(results);
     });
 });
 
