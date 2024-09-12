@@ -21,8 +21,6 @@ function Post() {
                 <div id={styles.titleContainer}>
                     <div>
                         <h1>{data.title}</h1>
-                        <h1>useParams으로 가져온 id ={id}</h1>
-                        <h1>{console.log("data : ", data)}</h1>
                     </div>
                     <div id={styles.dataManagementContainer}>
                         <Link className={styles.dataManagementLink}>통계</Link>
@@ -32,12 +30,12 @@ function Post() {
                     <div id={styles.postMetaContainer}>
                         <div>
                             <Link className={styles.dataManagementLink}>
-                                작성자
+                                {data.author}
                             </Link>
-                            <Link> · 약 언제 전 ·</Link>
+                            <Link> · {data.created_at} ·</Link>
                             <Link className={styles.private}>비공개</Link>
                         </div>
-                        <div>좋아요수</div>
+                        <div>좋아요 수 : {data.likes}</div>
                     </div>
                     <div id={styles.tagWrapper}>
                         <Link id={styles.tag}>태그</Link>
@@ -46,7 +44,7 @@ function Post() {
                     </div>
                 </div>
                 <div id={styles.postContentContainer}>
-                    <div>글</div>
+                    <div>{data.content}</div>
                 </div>
                 <hr></hr>
                 <div id={styles.writeCommentContainer}>
