@@ -11,8 +11,6 @@ function Post() {
             .then((response) => response.json())
             .then((data) => setData(data))
             .catch((error) => console.log(error));
-
-        console.log("data : ", data);
     }, []);
 
     return (
@@ -30,7 +28,7 @@ function Post() {
                     <div id={styles.postMetaContainer}>
                         <div>
                             <Link className={styles.dataManagementLink}>
-                                {data.author}
+                                {data.title}
                             </Link>
                             <Link> · {data.created_at} ·</Link>
                             <Link className={styles.private}>비공개</Link>
