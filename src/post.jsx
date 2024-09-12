@@ -1,14 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./styles/post.module.css";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 function Post() {
+    const { id } = useParams();
+
+    const [data, setData] = useState([]);
+    useEffect(() => {
+        fetch(`http://localhost:3001/api/posts/${id}`)
+            .then((response) => response.json())
+            .then((data) => setData(data))
+            .catch((error) => console.log(error));
+
+        console.log("data : ", data);
+    }, []);
+
     return (
         <div id={styles.container}>
             <div id={styles.main}>
                 <div id={styles.titleContainer}>
                     <div>
-                        <h1>제목</h1>
+                        <h1>{data.title}</h1>
+                        <h1>useParams으로 가져온 id ={id}</h1>
+                        <h1>{console.log("data : ", data)}</h1>
                     </div>
                     <div id={styles.dataManagementContainer}>
                         <Link className={styles.dataManagementLink}>통계</Link>

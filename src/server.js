@@ -13,6 +13,7 @@ const connection = mysql.createConnection({
     database: "code_learner_db",
 });
 
+// http://localhost:3000에서 온 요청만 허용하겠다, 기본적으로 보안상의 이유로 접근을 제한
 app.use(cors({ origin: "http://localhost:3000" }));
 
 // 데이터베이스 연결
@@ -27,6 +28,22 @@ app.get("/api/data", (req, res) => {
         if (err) throw err;
         res.send(results);
     });
+});
+
+// 데이터 가져오기 API
+app.get("/api/posts/:id", (req, res) => {
+    const id = req.params.id;
+    connection.query(
+        "SELECT * FROM posts Where id = ?",
+        [id],
+        (err, results) => {
+            if (err) throw err;
+            res.send(results[0]);
+
+            console.log("results[0]:", results[0]);
+        }
+    );
+    console.log("postId:", id);
 });
 
 app.listen(port, () => {

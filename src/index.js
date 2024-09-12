@@ -27,9 +27,8 @@ root.render(
                 <Route path="/login" element={<Login />} />
                 <Route path="/notFound" element={<NotFound />} />
                 <Route path="/board" element={<Main />} />
-                <Route path="/board/post/?id=1" element={<Post />} />
+                <Route path="/board/post/:id" element={<Post />} />
             </Routes>
-            <Post></Post>
             <Footer></Footer>
         </HashRouter>
     </React.StrictMode>
