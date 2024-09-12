@@ -11,6 +11,14 @@ function Header() {
     ];
 
     const themaItems = [
+        // themaName: 테마명
+        // mainBackgroundColor: 기본 배경색상
+        // mainLineColor: 기본 라인색상
+        // elementColor1: 요소색상 ex) Header 로그인 버튼
+        // elementColorHover1: 요소색상 Hover
+        // elementColor2: 요소색상 ex) Header 회원가입 버튼
+        // elementColorHover2: 요소색상 Hover
+        // fontColor: 기본 글자색상
         {
             themaName: "darkblue",
             mainBackgroundColor: "rgb(31, 41,55)",
@@ -22,12 +30,22 @@ function Header() {
             fontColor: "white",
         },
         {
+            themaName: "dark",
+            mainBackgroundColor: "rgb(18, 18, 18)",
+            mainLineColor: "rgb(52, 58, 64)",
+            elementColor1: "rgb(30, 30, 30)",
+            elementColorHover1: "rgb(50, 50, 50)",
+            elementColor2: "rgb(50, 50, 50)",
+            elementColorHover2: "rgb(70, 70, 70)",
+            fontColor: "white",
+        },
+        {
             themaName: "white",
             mainBackgroundColor: "white",
             mainLineColor: "rgb(212, 212, 212)",
-            elementColor1: "rgb(246, 246, 248)", // 로그인 및 배경
+            elementColor1: "rgb(246, 246, 248)",
             elementColorHover1: "rgb(236, 236, 238)",
-            elementColor2: "rgb(238, 238, 238)", // 회원가입, 버튼 요소
+            elementColor2: "rgb(238, 238, 238)",
             elementColorHover2: "rgb(233, 233, 233)",
             fontColor: "black",
         },
