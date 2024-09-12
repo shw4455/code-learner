@@ -11,18 +11,9 @@ function Post() {
                         <h1>제목</h1>
                     </div>
                     <div id={styles.dataManagementContainer}>
-                        <Link className={styles.dataManagementLink}>
-                            {" "}
-                            통계{" "}
-                        </Link>
-                        <Link className={styles.dataManagementLink}>
-                            {" "}
-                            수정{" "}
-                        </Link>
-                        <Link className={styles.dataManagementLink}>
-                            {" "}
-                            삭제{" "}
-                        </Link>
+                        <Link className={styles.dataManagementLink}>통계</Link>
+                        <Link className={styles.dataManagementLink}>수정</Link>
+                        <Link className={styles.dataManagementLink}>삭제</Link>
                     </div>
                     <div id={styles.postMetaContainer}>
                         <div>
@@ -36,7 +27,7 @@ function Post() {
                     </div>
                     <div id={styles.tagWrapper}>
                         <Link id={styles.tag}>태그</Link>
-                        <Link id={styles.tag}>태태태그그그</Link>{" "}
+                        <Link id={styles.tag}>태태태그그그</Link>
                         <Link id={styles.tag}>태태태그그그</Link>
                     </div>
                 </div>
