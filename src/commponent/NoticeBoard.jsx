@@ -39,7 +39,7 @@ function App() {
                         {data.map((item) => (
                             <tr key={item.id}>
                                 <td>{item.id}</td>
-                                <Link to={`post/${item.id}`}>
+                                <Link to={`/board/post/${item.id}`}>
                                     <td>{item.title}</td>
                                 </Link>
                                 <td>{item.author}</td>
