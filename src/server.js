@@ -49,6 +49,7 @@ app.get("/api/posts/:id", (req, res) => {
                     if (err) throw err;
 
                     // 클라이언트에 게시글 정보와 댓글 정보를 함께 전송
+                    // JavaScript 객체를 JSON 문자열로 변환
                     res.json({
                         post: postResults,
                         comments: commentResults,

@@ -1,23 +1,4 @@
 # 현재
-+---------------------------+
-| Tables_in_code_learner_db |
-+---------------------------+
-| posts                    |
-+---------------------------+
-
-+------------+--------------+------+-----+---------+----------------+
-| Field      | Type         | Null | Key | Default | Extra          |
-+------------+--------------+------+-----+---------+----------------+
-| id         | int          | NO   | PRI | NULL    | auto_increment |
-| title      | varchar(100) | NO   |     | NULL    |                |
-| author     | varchar(50)  | NO   |     | NULL    |                |
-| content    | text         | YES  |     | NULL    |                |
-| created_at | date         | NO   |     |r NULL    |                |
-| views      | int          | YES  |     | 0       |                |
-| likes      | int          | YES  |     | 0       |                |
-+------------+--------------+------+-----+---------+----------------+
-
-# 중간점검
 user
 +------------+--------------+------+-----+-------------------+-------------------+
 | Field      | Type         | Null | Key | Default           | Extra             |
@@ -61,20 +42,14 @@ author: 작성자 아이디 (foreign key -> user 테이블)
 [x] author를, username으로 바꾸고
    ALTER TABLE posts
    CHANGE author username VARCHAR(50);
-[] posts에 username가
+[x] posts에 username가
     작성한 유저의 정보를 받아와야할거 같은데
-[] user 테이블에 username을? 왜래키 해야할듯
+[x] user 테이블에 username을? 왜래키 해야할듯
 
 updated_at: 수정 시간 (datetime)
 is_deleted: 삭제 여부 (boolean)에 대해서 추가
 
 [] 사용자의 id 값이 변경될 때, posts 테이블의 user_id 값도 자동으로 업데이트됩니다.
-
-# 해줘야 하는 것
-ALTER TABLE posts (
-    ADD author
-    ADD updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP,
-    ADD is_deleted BOOLEAN DEFAULT FALSE
 
 
 # 질문
@@ -170,3 +145,39 @@ comments
 | 47 |       4 |         1 | 네 번째 게시글의 세 번째 댓글입니다.                | 2024-09-13 05:22:51 |      NULL |
 | 48 |       4 |         2 | 네 번째 게시글의 네 번째 댓글입니다.                | 2024-09-13 05:22:51 |      NULL |
 +----+---------+-----------+-----------------------------------------------------+---------------------+-----------+
+
+app.get('/api/posts/:id', (req, res) => {
+    const postId = req.params.id;
+
+    connection.query(
+        `
+        SELECT 
+            p.*, 
+            c.* 
+        FROM 
+            posts p 
+        LEFT JOIN 
+            comments c ON p.id = c.post_id 
+        WHERE 
+            p.id = ?
+        `,
+        [postId],
+        (err, results) => {
+            if (err) throw err;
+
+            // 결과 데이터 가공
+            const post = results[0];
+            const comments = results.slice(1).map(item => ({
+                id: item.comment_id,
+                content: item.comment_content,
+                // ... 기타 댓글 필드
+            }));
+
+            // 클라이언트에 게시글 정보와 댓글 정보를 함께 전송
+            res.json({
+                post,
+                comments,
+            });
+        }
+    );
+});
