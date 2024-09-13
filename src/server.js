@@ -32,18 +32,36 @@ app.get("/api/data", (req, res) => {
 
 // 데이터 가져오기 API
 app.get("/api/posts/:id", (req, res) => {
-    const id = req.params.id;
-    connection.query(
-        "SELECT * FROM posts Where id = ?",
-        [id],
-        (err, results) => {
-            if (err) throw err;
-            res.send(results[0]);
+    const postId = req.params.id;
 
-            console.log("results[0]:", results[0]);
+    // 게시글 정보 가져오기
+    connection.query(
+        "SELECT * FROM posts WHERE id = ?",
+        [postId],
+        (err, postResults) => {
+            if (err) throw err;
+
+            // 댓글 정보 가져오기
+            connection.query(
+                "SELECT * FROM comments WHERE post_id = ?",
+                [postId],
+                (err, commentResults) => {
+                    if (err) throw err;
+
+                    // 클라이언트에 게시글 정보와 댓글 정보를 함께 전송
+                    res.json({
+                        post: postResults,
+                        comments: commentResults,
+                    });
+                    console.log(
+                        "postResults, commentResults",
+                        postResults,
+                        commentResults
+                    );
+                }
+            );
         }
     );
-    console.log("postId:", id);
 });
 
 app.listen(port, () => {
