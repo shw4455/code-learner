@@ -27,7 +27,7 @@ root.render(
                 <Route path="/login" element={<Login />} />
                 <Route path="/notFound" element={<NotFound />} />
                 <Route path="/board" element={<Main />} />
-                <Route path="/board/post/:id" element={<Post />} />
+                <Route path="/board/post/:postId" element={<Post />} />
             </Routes>
             <Footer></Footer>
         </HashRouter>

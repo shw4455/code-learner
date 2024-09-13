@@ -31,8 +31,9 @@ app.get("/api/data", (req, res) => {
 });
 
 // 데이터 가져오기 API
-app.get("/api/posts/:id", (req, res) => {
-    const postId = req.params.id;
+app.get("/api/posts/:postId", (req, res) => {
+    const postId = req.params.postId;
+    console.log('요청이 들어왔습니다:', postId);
 
     // 게시글 정보 가져오기
     connection.query(
@@ -55,11 +56,6 @@ app.get("/api/posts/:id", (req, res) => {
                         comments: commentResults,
                         commentCount: commentResults.length,
                     });
-                    console.log(
-                        "postResults, commentResults",
-                        postResults,
-                        commentResults
-                    );
                 }
             );
         }

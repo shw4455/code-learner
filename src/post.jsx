@@ -3,11 +3,11 @@ import styles from "./styles/post.module.css";
 import { Link, useParams } from "react-router-dom";
 
 function Post() {
-    const { id } = useParams();
+    const { postId } = useParams();
 
     const [data, setData] = useState([]);
     useEffect(() => {
-        fetch(`http://localhost:3001/api/posts/${id}`)
+        fetch(`http://localhost:3001/api/posts/${postId}`)
             .then((response) => response.json())
             .then((data) => setData(data))
             .catch((error) => console.log(error));
@@ -18,7 +18,7 @@ function Post() {
             <div id={styles.main}>
                 <div id={styles.titleContainer}>
                     <div>
-                        <h1>{data.title}</h1>
+                        <h1>{console.log("data", data)}</h1>
                     </div>
                     <div id={styles.dataManagementContainer}>
                         <Link className={styles.dataManagementLink}>통계</Link>
