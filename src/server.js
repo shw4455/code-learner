@@ -53,6 +53,7 @@ app.get("/api/posts/:id", (req, res) => {
                     res.json({
                         post: postResults,
                         comments: commentResults,
+                        commentCount: commentResults.length,
                     });
                     console.log(
                         "postResults, commentResults",
