@@ -17,8 +17,8 @@ function Post() {
             <div id={styles.main}>
                 <div id={styles.titleContainer}>
                     <div>
-                        {/* 단축 평가 */}
-                        <h1>{data.comments?.[0]?.id || "No comments"}</h1>
+                        {/* 옵셔널 체이닝, 단축 평가 */}
+                        <h1>{data.post?.[0].title || "no data"}</h1>
                     </div>
                     <div id={styles.dataManagementContainer}>
                         <Link className={styles.dataManagementLink}>통계</Link>
@@ -28,12 +28,15 @@ function Post() {
                     <div id={styles.postMetaContainer}>
                         <div>
                             <Link className={styles.dataManagementLink}>
-                                {data.title}
+                                {data.user?.[0]?.username || "no data"}
+                            </Link>
                             </Link>
                             <Link> · {data.created_at} ·</Link>
                             <Link className={styles.private}>비공개</Link>
                         </div>
-                        <div>좋아요 수 : {data.likes}</div>
+                        <div>
+                            좋아요 수 : {data.post?.[0]?.likes || "no data"}
+                        </div>
                     </div>
                     <div id={styles.tagWrapper}>
                         <Link id={styles.tag}>태그</Link>
@@ -46,7 +49,7 @@ function Post() {
                 </div>
                 <hr></hr>
                 <div id={styles.writeCommentContainer}>
-                    <h4>N개의 댓글</h4>
+                    <h4>{data?.commentCount || "no data"}개의 댓글</h4>
                     <textarea
                         id={styles.commentTextArea}
                         name="comment"
@@ -57,26 +60,36 @@ function Post() {
                             댓글 작성 버튼
                         </button>
                     </div>
-                </div>
-                <div id={styles.commentContainer}>
-                    <div id={styles.commentAuthorWrapepr}>
-                        <div id={styles.commentAuthor}>
-                            <Link>작성자</Link>
-                            <div className={styles.createdAt}>약 n시간 전</div>
-                        </div>
-                        <div id={styles.commentManagement}>
-                            <Link className={styles.dataManagementLink}>
-                                수정
+                    <div id={styles.commentsContainer}></div>
+                    {data.comments?.map((comment) => (
+                        <div className={styles.commentContainer}>
+                            <div className={styles.commentAuthorWrapepr}>
+                                <div className={styles.commentAuthor}>
+                                    <Link>{comment.username}</Link>
+                                    <div className={styles.createdAt}>
+                                        {timeDifference(comment.created_at)}
+                                    </div>
+                                </div>
+                                <div id={styles.commentManagement}>
+                                    <Link className={styles.dataManagementLink}>
+                                        수정
+                                    </Link>
+                                    <Link className={styles.dataManagementLink}>
+                                        삭제
+                                    </Link>
+                                </div>
+                            </div>
+                            <div>
+                                <div className={styles.commentContentsWrapper}>
+                                    {comment.content}
+                                </div>
+                            </div>
+                            <Link className={styles.replyWrapper}>
+                                <div className={styles.reply}>답글 달기</div>
                             </Link>
-                            <Link className={styles.dataManagementLink}>
-                                삭제
-                            </Link>
+                            <hr></hr>
                         </div>
-                    </div>
-                    <div>
-                        <div id={styles.commentContentsWrapper}>댓글 내용</div>
-                    </div>
-                    <Link id={styles.replyWrapper}>답글 달기</Link>
+                    ))}
                 </div>
             </div>
         </div>

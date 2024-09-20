@@ -33,29 +33,45 @@ app.get("/api/data", (req, res) => {
 // 데이터 가져오기 API
 app.get("/api/posts/:postId", (req, res) => {
     const postId = req.params.postId;
-    console.log('요청이 들어왔습니다:', postId);
+    console.log("요청이 들어왔습니다:", postId);
 
-    // 게시글 정보 가져오기
+    // 유저 정보 가져오기
     connection.query(
-        "SELECT * FROM posts WHERE id = ?",
+        "SELECT u.* " +
+            "FROM users u " +
+            "JOIN posts p ON p.user_id = u.id " +
+            "WHERE p.id = ?",
         [postId],
-        (err, postResults) => {
+        (err, userResults) => {
             if (err) throw err;
 
-            // 댓글 정보 가져오기
+            // 게시글 정보 가져오기
             connection.query(
-                "SELECT * FROM comments WHERE post_id = ?",
+                "SELECT * FROM posts WHERE id = ?",
                 [postId],
-                (err, commentResults) => {
+                (err, postResults) => {
                     if (err) throw err;
 
-                    // 클라이언트에 게시글 정보와 댓글 정보를 함께 전송
-                    // JavaScript 객체를 JSON 문자열로 변환
-                    res.json({
-                        post: postResults,
-                        comments: commentResults,
-                        commentCount: commentResults.length,
-                    });
+                    // 댓글 정보 가져오기
+                    connection.query(
+                        "SELECT c.*, u.username " +
+                            "FROM comments c " +
+                            "JOIN users u ON c.writer_id = u.id " +
+                            "WHERE c.post_id = ?",
+                        [postId],
+                        (err, commentResults) => {
+                            if (err) throw err;
+
+                            // 클라이언트에 게시글 정보와 댓글 정보를 함께 전송
+                            // JavaScript 객체를 JSON 문자열로 변환
+                            res.json({
+                                user: userResults,
+                                post: postResults,
+                                comments: commentResults,
+                                commentCount: commentResults.length,
+                            });
+                        }
+                    );
                 }
             );
         }
