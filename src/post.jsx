@@ -72,7 +72,10 @@ function Post() {
                             <Link className={styles.private}>비공개</Link>
                         </div>
                         <div>
-                            좋아요 수 : {data.post?.[0]?.likes || "no data"}
+                            좋아요 수 :
+                            {data.post?.[0]?.likes == 0
+                                ? " 0"
+                                : data.post?.[0]?.likes || " no data"}
                         </div>
                     </div>
                     <div id={styles.tagWrapper}>
