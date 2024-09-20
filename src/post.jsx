@@ -82,7 +82,7 @@ function Post() {
                     </div>
                 </div>
                 <div id={styles.postContentContainer}>
-                    <div>{data.content}</div>
+                    <div>{data.post?.[0].content}</div>
                 </div>
                 <hr></hr>
                 <div id={styles.writeCommentContainer}>
