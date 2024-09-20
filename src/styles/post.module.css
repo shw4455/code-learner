@@ -57,21 +57,6 @@
 .private {
     padding: 0px 0.5rem;
     margin-left: 0.5rem;
-
-    outline: none;
-    border: none;
-    border-radius: 4px;
-
-    background: var(--element-color-blue);
-    color: var(--font-color);
-    font-size: 1rem;
-
-    cursor: pointer;
-    font-weight: bold;
-}
-
-#metaDataLink {
-    display: flex;
 }
 
 #tagWrapper {
