@@ -2,16 +2,49 @@ import React, { useEffect, useState } from "react";
 import styles from "./styles/post.module.css";
 import { Link, useParams } from "react-router-dom";
 
+function timeDifference(isoString) {
+    const moment = require("moment");
+
+    // ISO 8601 형식의 문자열을 Moment 객체로 변환
+    const targetTime = moment(isoString);
+    const now = moment();
+
+    // 두 시간 차이를 초 단위로 계산
+    const duration = moment.duration(now.diff(targetTime));
+
+    // 초, 분, 시간, 일, , 월, 년 단위로 변환하여 객체에 저장
+    const units = {
+        년: duration.years(),
+        개월: duration.months(),
+        주: duration.weeks(),
+        일: duration.days(),
+        시간: duration.hours(),
+        분: duration.minutes(),
+        초: duration.seconds(),
+    };
+
+    // 가장 큰 단위부터 순차적으로 확인하여 출력
+    for (const unit in units) {
+        if (units[unit] > 0) {
+            return `${units[unit]} ${unit} 전`;
+        }
+    }
+
+    return "방금 전";
+}
+
 function Post() {
     const { postId } = useParams();
 
     const [data, setData] = useState([]);
+
     useEffect(() => {
         fetch(`http://localhost:3001/api/posts/${postId}`)
             .then((response) => response.json())
             .then((data) => setData(data))
             .catch((error) => console.log(error));
     }, [postId]); // URL이 변경되면 useParams가 다시 호출되어 postId 값이 변경 > useEffect 동작 > 리렌더링(가상 DOM Diffing)
+
     return (
         <div id={styles.container}>
             <div id={styles.main}>
@@ -30,8 +63,12 @@ function Post() {
                             <Link className={styles.dataManagementLink}>
                                 {data.user?.[0]?.username || "no data"}
                             </Link>
+                            <Link>
+                                ·
+                                {timeDifference(data.post?.[0]?.created_at) ||
+                                    "no data"}
+                                ·
                             </Link>
-                            <Link> · {data.created_at} ·</Link>
                             <Link className={styles.private}>비공개</Link>
                         </div>
                         <div>
