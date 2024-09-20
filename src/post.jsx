@@ -11,8 +11,7 @@ function Post() {
             .then((response) => response.json())
             .then((data) => setData(data))
             .catch((error) => console.log(error));
-    }, []);
-
+    }, [postId]); // URL이 변경되면 useParams가 다시 호출되어 postId 값이 변경 > useEffect 동작 > 리렌더링(가상 DOM Diffing)
     return (
         <div id={styles.container}>
             <div id={styles.main}>
