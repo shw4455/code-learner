@@ -38,13 +38,25 @@
     color: var(--element-color-blue-hover);
 }
 
+#postMetaContainer {
+    display: flex;
+    justify-content: space-between;
+
+    margin-top: 1rem;
+}
+
+#metaDataContainer {
+    display: flex;
+}
+
+.separator {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
+
 .private {
-    height: 2rem;
     padding: 0px 0.5rem;
     margin-left: 0.5rem;
-
-    align-items: center;
-    justify-content: center;
 
     outline: none;
     border: none;
@@ -58,11 +70,8 @@
     font-weight: bold;
 }
 
-#postMetaContainer {
+#metaDataLink {
     display: flex;
-    justify-content: space-between;
-
-    margin-top: 1rem;
 }
 
 #tagWrapper {

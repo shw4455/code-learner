@@ -59,16 +59,16 @@ function Post() {
                         <Link className={styles.dataManagementLink}>삭제</Link>
                     </div>
                     <div id={styles.postMetaContainer}>
-                        <div>
+                        <div id={styles.metaDataContainer}>
                             <Link className={styles.dataManagementLink}>
                                 {data.user?.[0]?.username || "no data"}
                             </Link>
-                            <Link>
-                                ·
+                            <div className={styles.separator}>·</div>
+                            <Link className={styles.metaDataLink}>
                                 {timeDifference(data.post?.[0]?.created_at) ||
                                     "no data"}
-                                ·
                             </Link>
+                            <div className={styles.separator}>·</div>
                             <Link className={styles.private}>비공개</Link>
                         </div>
                         <div>
