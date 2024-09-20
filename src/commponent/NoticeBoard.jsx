@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, Route, Routes } from "react-router-dom";
-import styles from "./styles/NoticeBoard.module.css";
-import Post from "../post";
+import { Link } from "react-router-dom";
 
 function App() {
     const [data, setData] = useState([

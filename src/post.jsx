@@ -18,7 +18,8 @@ function Post() {
             <div id={styles.main}>
                 <div id={styles.titleContainer}>
                     <div>
-                        <h1>{console.log("data", data)}</h1>
+                        {/* 단축 평가 */}
+                        <h1>{data.comments?.[0]?.id || "No comments"}</h1>
                     </div>
                     <div id={styles.dataManagementContainer}>
                         <Link className={styles.dataManagementLink}>통계</Link>

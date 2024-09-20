@@ -4,8 +4,6 @@ import Board from "./board";
 import Tag from "./tag";
 import Right from "./right";
 import Top from "./top";
-import { Route, Routes } from "react-router-dom";
-import Post from "./post";
 
 function Main() {
     return (

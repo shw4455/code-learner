@@ -12,9 +12,7 @@ import NotFound from "./notFound";
 
 import Header from "./header";
 import Footer from "./footer";
-import Body from "./body";
 import Post from "./post";
-import Board from "./board";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

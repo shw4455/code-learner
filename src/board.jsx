@@ -1,8 +1,6 @@
 import { React, useState } from "react";
 import styles from "./styles/board.module.css";
 import NoticeBoard from "./commponent/NoticeBoard.jsx";
-import Post from "./post.jsx";
-import { Route, Routes } from "react-router-dom";
 
 function Board() {
     const [searchTerm, setSearchTerm] = useState("");
