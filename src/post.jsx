@@ -73,15 +73,23 @@ function Post() {
                         </div>
                         <div>
                             좋아요 수 :
-                            {data.post?.[0]?.likes == 0
+                            {data.post?.[0]?.likes === 0
                                 ? " 0"
                                 : data.post?.[0]?.likes || " no data"}
                         </div>
                     </div>
                     <div id={styles.tagWrapper}>
-                        <Link id={styles.tag}>태그</Link>
-                        <Link id={styles.tag}>태태태그그그</Link>
-                        <Link id={styles.tag}>태태태그그그</Link>
+                        {data.tags?.map((tags, index) => (
+                            <Link
+                                className={styles.tag}
+                                key={index}
+                                id={styles.tag}
+                            >
+                                {data?.tags?.[index]?.tag_name}
+                                {console.log("index", index)}
+                                {console.log("tag", tags)}
+                            </Link>
+                        ))}
                     </div>
                 </div>
                 <div id={styles.postContentContainer}>
