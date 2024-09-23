@@ -62,14 +62,27 @@ app.get("/api/posts/:postId", (req, res) => {
                         (err, commentResults) => {
                             if (err) throw err;
 
-                            // 클라이언트에 게시글 정보와 댓글 정보를 함께 전송
-                            // JavaScript 객체를 JSON 문자열로 변환
-                            res.json({
-                                user: userResults,
-                                post: postResults,
-                                comments: commentResults,
-                                commentCount: commentResults.length,
-                            });
+                            // 태그 정보 가져오기
+                            connection.query(
+                                "SELECT t.tag_name " +
+                                    "FROM post_tags pt " +
+                                    "INNER JOIN tags t ON pt.tag_id = t.id " +
+                                    "WHERE pt.post_id = ?",
+                                [postId],
+                                (err, tagsResults) => {
+                                    if (err) throw err;
+
+                                    // 클라이언트에 게시글 정보와 댓글 정보를 함께 전송
+                                    // JavaScript 객체를 JSON 문자열로 변환
+                                    res.json({
+                                        user: userResults,
+                                        post: postResults,
+                                        comments: commentResults,
+                                        tags: tagsResults,
+                                        commentCount: commentResults.length,
+                                    });
+                                }
+                            );
                         }
                     );
                 }
