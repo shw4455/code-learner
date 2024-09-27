@@ -1,12 +1,13 @@
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
+const bodyParser = require("body-parser");
 
 const app = express();
 const port = 3001;
 
 // MySQL 연결 설정
-const connection = mysql.createConnection({
+const db = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "1234",
@@ -16,27 +17,29 @@ const connection = mysql.createConnection({
 // http://localhost:3000에서 온 요청만 허용하겠다, 기본적으로 보안상의 이유로 접근을 제한
 app.use(cors({ origin: "http://localhost:3000" }));
 
+app.use(bodyParser.json());
+
 // 데이터베이스 연결
-connection.connect((err) => {
+db.connect((err) => {
     if (err) throw err;
     console.log("MySQL Connected...");
 });
 
-// 데이터 가져오기 API
+// board 데이터 가져오기 API
 app.get("/api/data", (req, res) => {
-    connection.query("SELECT * FROM posts", (err, results) => {
+    db.query("SELECT * FROM posts", (err, results) => {
         if (err) throw err;
         res.send(results);
     });
 });
 
-// 데이터 가져오기 API
+// post 데이터 가져오기 API
 app.get("/api/posts/:postId", (req, res) => {
     const postId = req.params.postId;
-    console.log("요청이 들어왔습니다:", postId);
+    console.log("get 요청이 들어왔습니다:", postId);
 
     // 유저 정보 가져오기
-    connection.query(
+    db.query(
         "SELECT u.* " +
             "FROM users u " +
             "JOIN posts p ON p.user_id = u.id " +
@@ -46,14 +49,14 @@ app.get("/api/posts/:postId", (req, res) => {
             if (err) throw err;
 
             // 게시글 정보 가져오기
-            connection.query(
+            db.query(
                 "SELECT * FROM posts WHERE id = ?",
                 [postId],
                 (err, postResults) => {
                     if (err) throw err;
 
                     // 댓글 정보 가져오기
-                    connection.query(
+                    db.query(
                         "SELECT c.*, u.username " +
                             "FROM comments c " +
                             "JOIN users u ON c.writer_id = u.id " +
@@ -63,7 +66,7 @@ app.get("/api/posts/:postId", (req, res) => {
                             if (err) throw err;
 
                             // 태그 정보 가져오기
-                            connection.query(
+                            db.query(
                                 "SELECT t.tag_name " +
                                     "FROM post_tags pt " +
                                     "INNER JOIN tags t ON pt.tag_id = t.id " +
@@ -89,6 +92,21 @@ app.get("/api/posts/:postId", (req, res) => {
             );
         }
     );
+});
+
+app.post("/api/post", (req, res) => {
+    console.log("req.body", req.body);
+
+    const q = "INSERT INTO posts(`title`, `content`) VALUES (?)";
+
+    const values = [req.body.title, req.body.content];
+
+    db.query(q, [values], (err, data) => {
+        if (err) return res.send(err);
+        return res.json(data);
+    });
+
+    console.log("post 요청이 들어왔습니다:");
 });
 
 app.listen(port, () => {

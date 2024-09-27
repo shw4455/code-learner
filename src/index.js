@@ -13,6 +13,7 @@ import NotFound from "./notFound";
 import Header from "./header";
 import Footer from "./footer";
 import Post from "./post";
+import CreatePost from "./createPost";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -26,6 +27,7 @@ root.render(
                 <Route path="/notFound" element={<NotFound />} />
                 <Route path="/board" element={<Main />} />
                 <Route path="/board/post/:postId" element={<Post />} />
+                <Route path="/board/create" element={<CreatePost />} />
             </Routes>
             <Footer></Footer>
         </HashRouter>

@@ -1,6 +1,8 @@
 import { React, useState } from "react";
 import styles from "./styles/board.module.css";
 import NoticeBoard from "./commponent/NoticeBoard.jsx";
+import { Link } from "react-router-dom";
+
 
 function Board() {
     const [searchTerm, setSearchTerm] = useState("");
@@ -72,7 +74,9 @@ function Board() {
                     <div className={styles.pageNumber}>1/100 페이지</div>
                     <i className="material-icons">chevron_right</i>
                 </div>
-                <button className={styles.smallButton}>작성하기</button>
+                <Link to="/board/create" className={styles.smallButton}>
+                    작성하기
+                </Link>
             </div>
             <NoticeBoard></NoticeBoard>
         </div>
