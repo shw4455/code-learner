@@ -129,6 +129,22 @@ app.put("/api/post/:postId", (req, res) => {
     console.log("PUT 요청이 들어왔습니다:", req.body);
 });
 
+app.delete("/api/post/:postId", (req, res) => {
+    const postId = req.params.postId;
+    console.log("DELETE 요청이 들어왔습니다: ", postId);
+
+    const q = "DELETE FROM posts WHERE id = ?";
+    const values = [postId];
+
+    db.query(q, values, (err, data) => {
+        if (err) return res.status(500).json(err);
+        if (data.affectedRows === 0)
+            return res.status(404).json({ message: "Post not found" });
+
+        res.json({ message: "Post delete successfully" });
+    });
+});
+
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });
