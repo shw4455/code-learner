@@ -109,6 +109,26 @@ app.post("/api/post", (req, res) => {
     console.log("post 요청이 들어왔습니다:");
 });
 
+app.put("/api/post/:postId", (req, res) => {
+    const postId = req.params.postId;
+    console.log("postId", postId);
+
+    const q = "UPDATE posts SET title = ?, content = ? WHERE id = ?";
+    const values = [req.body.title, req.body.content, postId];
+
+    console.log("values", values);
+
+    db.query(q, values, (err, data) => {
+        if (err) return res.status(500).json(err);
+        if (data.affectedRows === 0)
+            return res.status(404).json({ message: "Post not found" });
+
+        res.json({ message: "Post updated successfully" });
+    });
+
+    console.log("PUT 요청이 들어왔습니다:", req.body);
+});
+
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });
