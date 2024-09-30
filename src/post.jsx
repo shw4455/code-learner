@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./styles/post.module.css";
 import { Link, useParams } from "react-router-dom";
+import DeletePost from "./commponent/DeletePost.jsx";
 
 function timeDifference(isoString) {
     const moment = require("moment");
@@ -49,6 +50,7 @@ function Post() {
         <div id={styles.container}>
             <div id={styles.main}>
                 <div id={styles.titleContainer}>
+                    <DeletePost></DeletePost>
                     <div>
                         {/* 옵셔널 체이닝, 단축 평가 */}
                         <h1>{data.post?.[0].title || "no data"}</h1>
