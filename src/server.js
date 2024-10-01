@@ -27,7 +27,7 @@ db.connect((err) => {
 });
 
 // board 데이터 가져오기 API
-app.get("/api/data", (req, res) => {
+app.get("/api/posts", (req, res) => {
     db.query("SELECT * FROM posts", (err, results) => {
         if (err) throw err;
         res.send(results);

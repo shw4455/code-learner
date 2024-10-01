@@ -43,7 +43,7 @@ function App() {
     ]);
 
     useEffect(() => {
-        fetch("http://localhost:3001/api/data")
+        fetch("http://localhost:3001/api/posts")
             .then((response) => response.json())
             .then((data) => setData(data))
             .catch((error) => console.log(error));
