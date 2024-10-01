@@ -20,13 +20,19 @@
     width: var(--brower-width);
     height: 100%;
     position: relative;
+    margin-left: 50px;
+    margin-top: 2rem;
+    padding-bottom: 2rem;
 
     /* 좌우로 정렬시키기 위한 속성 */
     display: flex;
     /* 세로축/교차축의 정렬 방법 : 세로에서 중간에 두겠다 */
     align-items: center;
     /* 가로축/주축의 정렬 방법 : 사이에 공간을 두겠다 */
-    justify-content: space-between;
+    justify-content: space-around;
+}
 
-
+#container>div>p {
+    font-size: 0.8rem;
+    color: var(--element-color-gray-hover);
 }

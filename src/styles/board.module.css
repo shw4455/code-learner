@@ -69,10 +69,9 @@
     border: none;
     border-radius: 4px;
 
+    font-size: 1rem;
     color: var(--font-color);
     background-color: var(--element-color-blue);
-    font-size: 1rem;
-    text-align: center;
 }
 
 .smallButton:hover {
@@ -149,13 +148,12 @@ table {
 }
 
 /* table header */
-th,
-td {
+tr,
+th {
     padding: 10px;
     border-bottom: 1px solid var(--main-line-color);
 }
 
-/* table body */
-tbody>tr>td:nth-child(2) {
-    text-align: left;
+td {
+    padding: 10px;
 }

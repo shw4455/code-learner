@@ -1,4 +1,4 @@
-  :root {
+:root {
     --header-height: 50px;
     --footer-height: 50px;
 
@@ -8,9 +8,7 @@
     --element-color-gray: rgb(55 65 81);
     --element-color-gray-hover: rgb(75 85 99);
     --element-color-blue: rgb(0 144 249);
-    --element-color-blue-hover: rgb(11 127 211);
-    --font-color: white;
-    
+    --element-color-blue-hover: rgb(9 125 209);
     background-color: rgb(220 220 220);
     background-color: gainsboro;
     background-color: palegoldenrod;
@@ -23,51 +21,83 @@
     background-color: var(--main-background-color);
     color: white;
 
-    --tag-sidebar-button-width : 20px;
-  }
+    --tag-sidebar-button-width: 20px;
+}
 
-  * {
+* {
     color: var(--font-color);
     font-family: 'Noto Sans KR' sans-serif;
-  }
+}
 
-  *:visited {
+*:visited {
     color: var(--font-color);
-  }
+}
 
-  input {
+input {
     border: none;
     outline: none;
     /* padding: 10px; */
-  }
+}
 
-  input:focus {}
+input:focus {}
 
-  div {
+div {
     /* border-radius: 10px;
     border: 1px solid black; */
-  }
+}
 
-  button {
+button {
     border: none;
     background: none;
     cursor: pointer;
-  }
+}
 
-  /* Chrome 및 Safari 스크롤바 스타일링 */
-  ::-webkit-scrollbar {
+/* Chrome 및 Safari 스크롤바 스타일링 */
+
+h1 {
+    font-size: 2.25rem;
+}
+
+h4 {
+    font-size: 1.125rem;
+}
+
+textarea {
+    width: 100%;
+    min-height: 6.125rem;
+    padding: 1rem 1rem 1.5rem;
+    /* margin-bottom: 1.5rem; */
+
+    outline: none;
+    border-radius: 4px;
+    border: 1px solid var(--main-line-color);
+
+    resize: none;
+
+    font-size: 1rem;
+    color: var(--text1);
+    line-height: 1.75;
+    background: var(--main-background-color);
+}
+
+hr {
+    border: solid 1px var(--main-line-color);
+}
+
+/* Chrome 및 Safari 스크롤바 스타일링 */
+::-webkit-scrollbar {
     width: 15px;
-  }
+}
 
-  ::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
     background-color: var(--element-color-gray-hover);
     box-shadow: 0 0 10px rgba(0 0 0 0.2);
-  }
+}
 
-  ::-webkit-scrollbar-corner {
+::-webkit-scrollbar-corner {
     background-color: var(--main-background-color);
-  }
+}
 
-  ::-webkit-scrollbar-track-piece {
+::-webkit-scrollbar-track-piece {
     background: var(--element-color-gray);
-  } 
+}
