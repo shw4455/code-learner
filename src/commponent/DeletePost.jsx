@@ -6,12 +6,11 @@ import styles from "./styles/deletePost.module.css";
 
 const DeletePost = (props) => {
     const navigate = useNavigate();
-    const postId = props.postId;
 
     const onConfirm = async (e) => {
         try {
             await axios
-                .delete(`http://localhost:3001/api/post/${postId}`)
+                .delete(`http://localhost:3001/api/post/${props.postId}`)
                 .then(navigate("/"));
         } catch (err) {
             console.log(err);
