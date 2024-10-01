@@ -17,6 +17,7 @@ const db = mysql.createConnection({
 // http://localhost:3000에서 온 요청만 허용하겠다, 기본적으로 보안상의 이유로 접근을 제한
 app.use(cors({ origin: "http://localhost:3000" }));
 
+// 애플리케이션에서 클라이언트로부터 전송된 JSON 형식의 데이터를 파싱하여 req.body 객체에 담아주는 미들웨어
 app.use(bodyParser.json());
 
 // 데이터베이스 연결
