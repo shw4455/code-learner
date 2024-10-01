@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./styles/post.module.css";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import DeletePost from "./commponent/DeletePost.jsx";
 
 function timeDifference(isoString) {
@@ -36,7 +36,7 @@ function timeDifference(isoString) {
 
 function Post() {
     const { postId } = useParams();
-
+    const navigate = useNavigate();
     const [data, setData] = useState([]);
 
     useEffect(() => {
@@ -49,6 +49,9 @@ function Post() {
     const [showDeleted, setShowDeleted] = useState(false);
     const handleDelete = () => {
         setShowDeleted(true); // 삭제 버튼 클릭 시 showDeleted 상태를 true로 변경
+    };
+    const handleUpdate = () => {
+        navigate(`/board/update/${postId}`);
     };
     const handleCancel = () => {
         setShowDeleted(false);
@@ -70,8 +73,18 @@ function Post() {
                     </div>
                     <div id={styles.dataManagementContainer}>
                         <Link className={styles.dataManagementLink}>통계</Link>
-                        <Link className={styles.dataManagementLink}>수정</Link>
-                        <button onClick={handleDelete}>삭제</button>
+                        <button
+                            className={styles.dataManagementLink}
+                            onClick={handleUpdate}
+                        >
+                            수정
+                        </button>
+                        <button
+                            className={styles.dataManagementLink}
+                            onClick={handleDelete}
+                        >
+                            삭제
+                        </button>
                     </div>
                     <div id={styles.postMetaContainer}>
                         <div id={styles.metaDataContainer}>
