@@ -30,6 +30,7 @@ root.render(
                 <Route path="/board/post/:postId" element={<Post />} />
                 <Route path="/board/create" element={<CreatePost />} />
                 <Route path="/board/update/:postId" element={<UpdatePost />} />
+                <Route path="/*" element={<NotFound />} />
             </Routes>
             <Footer></Footer>
         </HashRouter>
