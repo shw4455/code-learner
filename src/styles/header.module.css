@@ -206,10 +206,10 @@
     background: var(--main-background-color);
 }
 
-.themaBtn input:checked+.themaBtn label::before {
+.themaBtn input:checked+label::before {
     background: var(--element-color-gray);
 }
 
-.themaBtn input:checked+.themaBtn abel::after {
+.themaBtn input:checked+label::after {
     left: calc(100% - var(--btn-circle-diameter) - var(--btn-circle-gap));
 }
