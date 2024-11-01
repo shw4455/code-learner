@@ -27,7 +27,9 @@ db.connect((err) => {
 app.use(cors({ origin: "http://localhost:3000" }));
 
 // 애플리케이션에서 클라이언트로부터 전송된 JSON 형식의 데이터를 파싱하여 req.body 객체에 담아주는 미들웨어
-app.use(bodyParser.json()); // 회원가입 API
+app.use(bodyParser.json());
+
+// 회원가입 API
 app.post("/api/register", async (req, res) => {
     const { username, email, password } = req.body;
 
@@ -91,63 +93,63 @@ app.get("/api/posts", (req, res) => {
     });
 });
 
-// post 데이터 가져오기 API
+// 특정 게시글 데이터 가져오기 API
 app.get("/api/posts/:postId", (req, res) => {
     const postId = req.params.postId;
     console.log("get 요청이 들어왔습니다:", postId);
 
-    // 유저 정보 가져오기
+    // 유저 및 게시글 정보 가져오기
     db.query(
-        "SELECT u.* " +
-            "FROM users u " +
-            "JOIN posts p ON p.user_id = u.id " +
+        "SELECT p.*, u.username " +
+            "FROM posts p " +
+            "JOIN users u ON p.user_id = u.id " +
             "WHERE p.id = ?",
         [postId],
-        (err, userResults) => {
-            if (err) throw err;
+        (err, postResults) => {
+            if (err) return res.status(500).json({ error: "Database error" });
+            if (postResults.length === 0) {
+                return res.status(404).json({ error: "Post not found" });
+            }
+            res.json({ post: postResults[0] });
+        }
+    );
+});
 
-            // 게시글 정보 가져오기
-            db.query(
-                "SELECT * FROM posts WHERE id = ?",
-                [postId],
-                (err, postResults) => {
-                    if (err) throw err;
+// 특정 게시글의 댓글 가져오기 API
+app.get("/api/posts/:postId/comments", (req, res) => {
+    const postId = req.params.postId;
+    console.log("댓글 목록 요청이 들어왔습니다:", postId);
 
-                    // 댓글 정보 가져오기
-                    db.query(
-                        "SELECT c.*, u.username " +
-                            "FROM comments c " +
-                            "JOIN users u ON c.writer_id = u.id " +
-                            "WHERE c.post_id = ?",
-                        [postId],
-                        (err, commentResults) => {
-                            if (err) throw err;
+    // 댓글 정보 가져오기
+    db.query(
+        "SELECT c.*, u.username " +
+            "FROM comments c " +
+            "JOIN users u ON c.writer_id = u.id " +
+            "WHERE c.post_id = ? " +
+            "ORDER BY c.created_at ASC",
+        [postId],
+        (err, commentResults) => {
+            if (err) return res.status(500).json({ error: "Database error" });
+            res.json(commentResults);
+        }
+    );
+});
 
-                            // 태그 정보 가져오기
-                            db.query(
-                                "SELECT t.tag_name " +
-                                    "FROM post_tags pt " +
-                                    "INNER JOIN tags t ON pt.tag_id = t.id " +
-                                    "WHERE pt.post_id = ?",
-                                [postId],
-                                (err, tagsResults) => {
-                                    if (err) throw err;
+// 태그 가져오기 API
+app.get("/api/posts/:postId/tags", (req, res) => {
+    const postId = req.params.postId;
+    console.log("태그 목록 요청이 들어왔습니다:", postId);
 
-                                    // 클라이언트에 게시글 정보와 댓글 정보를 함께 전송
-                                    // JavaScript 객체를 JSON 문자열로 변환
-                                    res.json({
-                                        user: userResults,
-                                        post: postResults,
-                                        comments: commentResults,
-                                        tags: tagsResults,
-                                        commentCount: commentResults.length,
-                                    });
-                                }
-                            );
-                        }
-                    );
-                }
-            );
+    // 태그 정보 가져오기
+    db.query(
+        "SELECT t.tag_name " +
+            "FROM post_tags pt " +
+            "JOIN tags t ON pt.tag_id = t.id " +
+            "WHERE pt.post_id = ?",
+        [postId],
+        (err, tagResults) => {
+            if (err) return res.status(500).json({ error: "Database error" });
+            res.json(tagResults);
         }
     );
 });
@@ -156,13 +158,15 @@ app.get("/api/posts/:postId", (req, res) => {
 app.post("/api/post", (req, res) => {
     console.log("req.body", req.body);
 
-    const q = "INSERT INTO posts(`title`, `content`) VALUES (?)";
+    const q = "INSERT INTO posts (title, content, user_id) VALUES (?, ?, ?)";
+    const values = [req.body.title, req.body.content, req.body.user_id];
 
-    const values = [req.body.title, req.body.content];
-
-    db.query(q, [values], (err, data) => {
-        if (err) return res.send(err);
-        return res.json(data);
+    db.query(q, values, (err, data) => {
+        if (err) return res.status(500).json({ error: "Database error" });
+        res.json({
+            message: "Post created successfully",
+            postId: data.insertId,
+        });
     });
 
     console.log("post 요청이 들어왔습니다:");
@@ -202,11 +206,39 @@ app.delete("/api/post/:postId", (req, res) => {
         if (data.affectedRows === 0)
             return res.status(404).json({ message: "Post not found" });
 
-        res.json({ message: "Post delete successfully" });
+        res.json({ message: "Post deleted successfully" });
     });
 });
 
-//
+// 댓글 작성 API
+app.post("/api/posts/:postId/comments", (req, res) => {
+    console.log("댓글 작성 요청이 들어왔습니다");
+    const postId = req.params.postId;
+    const { writer_id, content } = req.body;
+
+    const sql =
+        "INSERT INTO comments (post_id, writer_id, content) VALUES (?, ?, ?)";
+    db.query(sql, [postId, writer_id, content], (err, result) => {
+        if (err) return res.status(500).json({ error: "Database error" });
+        res.status(201).json({ message: "Comment added successfully" });
+    });
+});
+
+// 댓글 삭제 API
+app.delete("/api/comments/:commentId", (req, res) => {
+    console.log("댓글 삭제 요청이 들어왔습니다");
+    const commentId = req.params.commentId;
+
+    const sql = "DELETE FROM comments WHERE id = ?";
+    db.query(sql, [commentId], (err, result) => {
+        if (err) return res.status(500).json({ error: "Database error" });
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: "Comment not found" });
+        }
+        res.json({ message: "Comment deleted successfully" });
+    });
+});
+
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });

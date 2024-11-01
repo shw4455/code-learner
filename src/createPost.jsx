@@ -11,6 +11,7 @@ function CreatePost() {
     const [post, setPost] = useState({
         title: "",
         content: "",
+        user_id: "1",
     });
     const [error, setError] = useState(false); // ?
     const navigate = useNavigate(); // ?
