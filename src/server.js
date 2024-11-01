@@ -95,6 +95,7 @@ app.get("/api/posts/:postId", (req, res) => {
     );
 });
 
+// 글 작성
 app.post("/api/post", (req, res) => {
     console.log("req.body", req.body);
 
@@ -110,6 +111,7 @@ app.post("/api/post", (req, res) => {
     console.log("post 요청이 들어왔습니다:");
 });
 
+// 글 업데이트
 app.put("/api/post/:postId", (req, res) => {
     const postId = req.params.postId;
     console.log("postId", postId);
@@ -130,6 +132,7 @@ app.put("/api/post/:postId", (req, res) => {
     console.log("PUT 요청이 들어왔습니다:", req.body);
 });
 
+// 글 삭제
 app.delete("/api/post/:postId", (req, res) => {
     const postId = req.params.postId;
     console.log("DELETE 요청이 들어왔습니다: ", postId);
@@ -146,6 +149,7 @@ app.delete("/api/post/:postId", (req, res) => {
     });
 });
 
+// 
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });
