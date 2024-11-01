@@ -15,6 +15,7 @@ import Footer from "./footer";
 import Post from "./post";
 import CreatePost from "./createPost";
 import UpdatePost from "./updatePost";
+import TestPage from "./testPage";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -30,6 +31,7 @@ root.render(
                 <Route path="/board/post/:postId" element={<Post />} />
                 <Route path="/board/create" element={<CreatePost />} />
                 <Route path="/board/update/:postId" element={<UpdatePost />} />
+                <Route path="/testPage" element={<TestPage></TestPage>} />
                 <Route path="/*" element={<NotFound />} />
             </Routes>
             <Footer></Footer>

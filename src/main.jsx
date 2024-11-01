@@ -19,8 +19,7 @@ function Main() {
                     <Right></Right>
                 </div>
             </div>
-            <Login></Login>
-            <Register></Register>
+
         </div>
     );
 }

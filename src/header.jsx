@@ -8,6 +8,7 @@ function Header() {
         { label: "게시판", to: "/board" },
         { label: "체크", to: "check" },
         { label: "NotFound", to: "/notFound" },
+        { label: "testPage", to: "/testPage" },
     ];
 
     const themaItems = [
