@@ -1,10 +1,13 @@
-const express = require("express");
-const mysql = require("mysql2");
-const cors = require("cors");
-const bodyParser = require("body-parser");
+const express = require("express"); // Node.js를 위한 웹 애플리케이션 프레임워크, 서버 애플리케이션을 만들기 쉽게 해줌
+const mysql = require("mysql2"); // MySQL 데이터베이스와 연결할 수 있도록 도와주는 패키지
+const bcrypt = require("bcryptjs"); // 암호화를 위한 라이브러리
+const jwt = require("jsonwebtoken"); // JWT(JSON Web Token)를 생성하고 검증하는 패키지
+const cors = require("cors"); // CORS(Cross-Origin Resource Sharing) 요청을 허용하기 위한 미들웨어
+const bodyParser = require("body-parser"); // Express에서 HTTP 요청의 본문 데이터를 쉽게 처리할 수 있도록 해주는 미들웨어
 
 const app = express();
 const port = 3001;
+const JWT_SECRET = "your_secret_key"; // 환경 변수로 설정 권장
 
 // MySQL 연결 설정
 const db = mysql.createConnection({
@@ -14,16 +17,70 @@ const db = mysql.createConnection({
     database: "code_learner_db",
 });
 
-// http://localhost:3000에서 온 요청만 허용하겠다, 기본적으로 보안상의 이유로 접근을 제한
-app.use(cors({ origin: "http://localhost:3000" }));
-
-// 애플리케이션에서 클라이언트로부터 전송된 JSON 형식의 데이터를 파싱하여 req.body 객체에 담아주는 미들웨어
-app.use(bodyParser.json());
-
 // 데이터베이스 연결
 db.connect((err) => {
     if (err) throw err;
     console.log("MySQL Connected...");
+});
+
+// http://localhost:3000에서 온 요청만 허용하겠다, 기본적으로 보안상의 이유로 접근을 제한
+app.use(cors({ origin: "http://localhost:3000" }));
+
+// 애플리케이션에서 클라이언트로부터 전송된 JSON 형식의 데이터를 파싱하여 req.body 객체에 담아주는 미들웨어
+app.use(bodyParser.json()); // 회원가입 API
+app.post("/api/register", async (req, res) => {
+    const { username, email, password } = req.body;
+
+    // 중복 사용자 및 이메일 확인
+    db.query(
+        "SELECT * FROM users WHERE username = ? OR email = ?",
+        [username, email],
+        async (err, results) => {
+            if (err) return res.status(500).json({ error: "Database error" });
+            if (results.length > 0) {
+                return res
+                    .status(400)
+                    .json({ error: "Username or email already exists" });
+            }
+
+            // 비밀번호 해싱 후 저장
+            const hashedPassword = await bcrypt.hash(password, 10);
+            db.query(
+                "INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
+                [username, email, hashedPassword],
+                (err, result) => {
+                    if (err)
+                        return res
+                            .status(500)
+                            .json({ error: "Database error" });
+                    res.status(201).json({ message: "User registered" });
+                }
+            );
+        }
+    );
+});
+
+// 로그인 API
+app.post("/api/login", (req, res) => {
+    const { email, password } = req.body;
+
+    const sql = "SELECT * FROM users WHERE email = ?";
+    db.query(sql, [email], async (err, results) => {
+        if (err) return res.status(500).json({ error: "Database error" });
+        if (results.length === 0)
+            return res.status(401).json({ error: "User not found" });
+
+        const user = results[0];
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
+        if (!passwordMatch)
+            return res.status(401).json({ error: "Invalid credentials" });
+
+        const token = jwt.sign({ id: user.id }, JWT_SECRET, {
+            expiresIn: "1h",
+        });
+        res.json({ token });
+    });
 });
 
 // board 데이터 가져오기 API
@@ -149,7 +206,7 @@ app.delete("/api/post/:postId", (req, res) => {
     });
 });
 
-// 
+//
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });

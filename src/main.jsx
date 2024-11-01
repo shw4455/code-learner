@@ -5,6 +5,8 @@ import Tag from "./tag";
 import Right from "./right";
 import Top from "./top";
 import Left from "./commponent/Left";
+import Login from "./login";
+import Register from "./register";
 
 function Main() {
     return (
@@ -17,6 +19,8 @@ function Main() {
                     <Right></Right>
                 </div>
             </div>
+            <Login></Login>
+            <Register></Register>
         </div>
     );
 }
