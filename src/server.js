@@ -210,20 +210,6 @@ app.delete("/api/post/:postId", (req, res) => {
     });
 });
 
-// 댓글 작성 API
-app.post("/api/posts/:postId/comments", (req, res) => {
-    console.log("댓글 작성 요청이 들어왔습니다");
-    const postId = req.params.postId;
-    const { writer_id, content } = req.body;
-
-    const sql =
-        "INSERT INTO comments (post_id, writer_id, content) VALUES (?, ?, ?)";
-    db.query(sql, [postId, writer_id, content], (err, result) => {
-        if (err) return res.status(500).json({ error: "Database error" });
-        res.status(201).json({ message: "Comment added successfully" });
-    });
-});
-
 // 댓글 삭제 API
 app.delete("/api/comments/:commentId", (req, res) => {
     console.log("댓글 삭제 요청이 들어왔습니다");
@@ -238,7 +224,39 @@ app.delete("/api/comments/:commentId", (req, res) => {
         res.json({ message: "Comment deleted successfully" });
     });
 });
+// 대댓글 작성
+app.post("/api/posts/:postId/comments", (req, res) => {
+    console.log("대댓글 요청이 들어왔습니다");
+    const { postId } = req.params;
+    const { writer_id, content, parent_id } = req.body;
 
+    const sql = `
+        INSERT INTO comments (post_id, writer_id, content, parent_id)
+        VALUES (?, ?, ?, ?)
+    `;
+
+    db.query(sql, [postId, writer_id, content, parent_id], (err, result) => {
+        if (err) return res.status(500).json({ error: "Database error" });
+        res.status(201).json({ message: "Comment added successfully" });
+    });
+});
+
+// 댓글과 대댓글을 함께 가져오는 API
+app.get("/api/posts/:postId/comments", (req, res) => {
+    const { postId } = req.params;
+
+    const sql = `
+        SELECT * 
+        FROM comments 
+        WHERE post_id = ? 
+        ORDER BY COALESCE(parent_id, id), created_at
+    `;
+
+    db.query(sql, [postId], (err, results) => {
+        if (err) return res.status(500).json({ error: "Database error" });
+        res.json(results);
+    });
+});
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });

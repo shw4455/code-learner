@@ -83,6 +83,10 @@ body 컴포넌트의 위에 header height만큼 margin-top을 주는 것
     추가로 브라우저 height - header heidht - footer height 만큼의 min-height를 갖는 것
 
 [] 내가 테그한 내용에 대해서, 태그가 생기도록
+[] 대댓글 기능 UI 만들고
+[] 대댓글 작성 삭제 가능하도록
+[] 로그인이 실제로 적용되도록 기능 만들기
+[] 문서화란?
 
 ### 문제
 
@@ -212,10 +216,8 @@ id > class 우선순위에서 밀려서 그런거였다
 [] create post 벡엔드에서 데이터를 못 받고 있다
 
 미들웨어 설정 문제:
-    Express에서 body-parser와 같은 미들웨어를 사용하여 요청 본문을 파싱해야 합니다. 이 설정이 잘못되어 있으면 req.body가 undefined가 될 수 있습니다.
-    JS 객체 데이터를 JSON 형태로 변환하는 과정은 클라이언트에서 보내는걸로 했습니다
-
-
+Express에서 body-parser와 같은 미들웨어를 사용하여 요청 본문을 파싱해야 합니다. 이 설정이 잘못되어 있으면 req.body가 undefined가 될 수 있습니다.
+JS 객체 데이터를 JSON 형태로 변환하는 과정은 클라이언트에서 보내는걸로 했습니다
 
 ### 그 외
 

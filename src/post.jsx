@@ -35,6 +35,8 @@ function Post() {
     const [data, setData] = useState(null); // 게시글 데이터 상태
     const [comments, setComments] = useState([]); // 댓글 목록 상태
     const [commentContent, setCommentContent] = useState(""); // 댓글 입력 상태
+    const [replyContent, setReplyContent] = useState(""); // 대댓글 입력 상태
+    const [replyParentId, setReplyParentId] = useState(null); // 대댓글의 상위 댓글 ID
 
     useEffect(() => {
         // 게시글 데이터 가져오기
@@ -60,7 +62,11 @@ function Post() {
             await fetch(`http://localhost:3001/api/posts/${postId}/comments`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ writer_id, content: commentContent }),
+                body: JSON.stringify({
+                    writer_id,
+                    content: commentContent,
+                    parent_id: null,
+                }), // 최상위 댓글은 parent_id가 null
             });
             setCommentContent("");
 
@@ -72,6 +78,36 @@ function Post() {
             setComments(updatedComments);
         } catch (error) {
             console.error("Error adding comment:", error);
+        }
+    };
+
+    const handleReplySubmit = async (parentId) => {
+        if (!replyContent.trim()) {
+            alert("대댓글 내용을 입력하세요.");
+            return;
+        }
+        try {
+            const writer_id = 1; // 실제 앱에서는 인증된 사용자 ID로 설정
+            await fetch(`http://localhost:3001/api/posts/${postId}/comments`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    writer_id,
+                    content: replyContent,
+                    parent_id: parentId,
+                }), // 대댓글에는 parent_id 설정
+            });
+            setReplyContent("");
+            setReplyParentId(null); // 대댓글 작성 후 초기화
+
+            // 댓글 목록 업데이트
+            const response = await fetch(
+                `http://localhost:3001/api/posts/${postId}/comments`
+            );
+            const updatedComments = await response.json();
+            setComments(updatedComments);
+        } catch (error) {
+            console.error("Error adding reply:", error);
         }
     };
 
@@ -95,6 +131,71 @@ function Post() {
     };
     const handleCancel = () => {
         setShowDeleted(false);
+    };
+
+    // 댓글과 대댓글을 계층적으로 렌더링하는 함수
+    const renderComments = (parentId = null) => {
+        return comments
+            .filter((comment) => comment.parent_id === parentId) // parent_id 기준으로 필터링
+            .map((comment) => (
+                <div
+                    key={comment.id}
+                    style={{ marginLeft: parentId ? "20px" : "0px" }}
+                >
+                    <div className={styles.commentContainer}>
+                        <div className={styles.commentAuthorWrapepr}>
+                            <div className={styles.commentAuthor}>
+                                <Link>{comment.username}</Link>
+                                <div className={styles.createdAt}>
+                                    {timeDifference(comment.created_at)}
+                                </div>
+                            </div>
+                            <div id={styles.commentManagement}>
+                                <button
+                                    className={styles.dataManagementLink}
+                                    onClick={() =>
+                                        handleCommentDelete(comment.id)
+                                    }
+                                >
+                                    삭제
+                                </button>
+                                <button
+                                    className={styles.dataManagementLink}
+                                    onClick={() => setReplyParentId(comment.id)} // 대댓글 작성 활성화
+                                >
+                                    답글
+                                </button>
+                            </div>
+                        </div>
+                        <div className={styles.commentContentsWrapper}>
+                            {comment.content}
+                        </div>
+                        {/* 대댓글 작성 폼 */}
+                        {replyParentId === comment.id && (
+                            <div className={styles.replyContainer}>
+                                <textarea
+                                    id={styles.commentTextArea}
+                                    value={replyContent}
+                                    onChange={(e) =>
+                                        setReplyContent(e.target.value)
+                                    }
+                                    placeholder="대댓글을 입력하세요."
+                                ></textarea>
+                                <button
+                                    className={styles.commentWriteButton}
+                                    onClick={() =>
+                                        handleReplySubmit(comment.id)
+                                    }
+                                >
+                                    답글 작성
+                                </button>
+                            </div>
+                        )}
+                        {/* 대댓글 재귀 렌더링 */}
+                        <div>{renderComments(comment.id)}</div>
+                    </div>
+                </div>
+            ));
     };
 
     return (
@@ -166,43 +267,7 @@ function Post() {
                         </button>
                     </div>
                     <div id={styles.commentsContainer}>
-                        {comments.map((comment) => (
-                            <div
-                                key={comment.id}
-                                className={styles.commentContainer}
-                            >
-                                <div className={styles.commentAuthorWrapepr}>
-                                    <div className={styles.commentAuthor}>
-                                        <Link>{comment.username}</Link>
-                                        <div className={styles.createdAt}>
-                                            {timeDifference(comment.created_at)}
-                                        </div>
-                                    </div>
-                                    <div id={styles.commentManagement}>
-                                        <button
-                                            className={
-                                                styles.dataManagementLink
-                                            }
-                                            onClick={() =>
-                                                handleCommentDelete(comment.id)
-                                            }
-                                        >
-                                            삭제
-                                        </button>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div
-                                        className={
-                                            styles.commentContentsWrapper
-                                        }
-                                    >
-                                        {comment.content}
-                                    </div>
-                                </div>
-                                <hr />
-                            </div>
-                        ))}
+                        {renderComments()} {/* 댓글과 대댓글 렌더링 */}
                     </div>
                 </div>
             </div>
