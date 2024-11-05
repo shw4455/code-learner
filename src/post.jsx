@@ -159,12 +159,24 @@ function Post() {
                                 >
                                     삭제
                                 </button>
-                                <button
+                                {/* 무한 대댓글 기능, 활성화시 대댓글에도 추가 대댓글 가능 */}
+                                {/* <button
                                     className={styles.dataManagementLink}
                                     onClick={() => setReplyParentId(comment.id)} // 대댓글 작성 활성화
                                 >
                                     답글
-                                </button>
+                                </button> */}
+                                {/* 첫 번째 레벨의 댓글에만 대댓글 작성 버튼 표시 */}
+                                {parentId === null && (
+                                    <button
+                                        className={styles.dataManagementLink}
+                                        onClick={() =>
+                                            setReplyParentId(comment.id)
+                                        }
+                                    >
+                                        답글
+                                    </button>
+                                )}
                             </div>
                         </div>
                         <div className={styles.commentContentsWrapper}>
