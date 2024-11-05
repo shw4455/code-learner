@@ -21,7 +21,7 @@ const UpdatePost = () => {
     useEffect(() => {
         fetch(`http://localhost:3001/api/posts/${postId}`)
             .then((response) => response.json())
-            .then((data) => setData(data.post[0]))
+            .then((data) =>  setData(data.post || { title: "", content: "" }))
             .catch((error) => console.log(error));
     }, [postId]);
 
