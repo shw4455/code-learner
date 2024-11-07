@@ -10,18 +10,28 @@ function CreatePost() {
     const { postId } = useParams();
     const { user } = useAuth(); // 로그인된 사용자 정보 가져오기
 
+    const navigate = useNavigate(); // 페이지 이동을 위해 useNavigate 가져오기
     const [post, setPost] = useState({
         title: "",
         content: "",
         user_id: user ? user.id : "", // user_id 초기값을 로그인된 사용자 ID로 설정
     });
-    const [error, setError] = useState(false); // ?
-    const navigate = useNavigate(); // ?
+    const [error, setError] = useState(false);
+
+    // 로그인되지 않았을 경우 경고 메시지를 띄우고 이전 페이지로 이동
     useEffect(() => {
+        if (!user) {
+            alert(
+                "로그인이 필요합니다. 로그인 후에 게시글을 작성할 수 있습니다."
+            );
+            navigate(-1); // 이전 페이지로 이동
+            return; // 실행 종료
+        }
+
         fetch(`http://localhost:3001/api/posts/${postId}`)
             .then((response) => response.json())
             .catch((error) => console.log(error));
-    }, [postId]); // URL이 변경되면 useParams가 다시 호출되어 postId 값이 변경 > useEffect 동작 > 리렌더링(가상 DOM Diffing)
+    }, [user, navigate, postId]); // 종속성 배열에 user, navigate, postId 추가
 
     const [showDeleted, setShowDeleted] = useState(false);
     const handleDelete = () => {
@@ -57,6 +67,7 @@ function CreatePost() {
                         placeholder="제목을 입력하세요"
                         name="title"
                         onChange={handleChange}
+                        disabled={!user} // 로그인되지 않은 경우 입력 비활성화
                     />
                 </div>
                 <hr className={styles.divider}></hr>
@@ -67,14 +78,16 @@ function CreatePost() {
                         placeholder="본문을 입력하세요."
                         name="content"
                         onChange={handleChange}
+                        disabled={!user} // 로그인되지 않은 경우 입력 비활성화
                     />
                 </div>
                 <hr></hr>
                 <div className={styles.buttonWrapper}>
-                    <Button
-                        onClick={handleClick}
-                        buttonText={"작성하기"}
-                    ></Button>
+                    {user ? (
+                        <Button onClick={handleClick} buttonText={"작성하기"} />
+                    ) : (
+                        <p>로그인 후에 게시글을 작성할 수 있습니다.</p>
+                    )}
                     {error && "Something went wrong!"}
                 </div>
             </div>
