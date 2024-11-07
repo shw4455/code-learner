@@ -298,6 +298,49 @@ app.put("/api/posts/:postId/view", (req, res) => {
     });
 });
 
+// 좋아요 증가 API (한 사용자당 하나의 게시글에 한 번만 가능)
+app.put("/api/posts/:postId/like", (req, res) => {
+    const { userId } = req.body; // 클라이언트에서 userId를 포함하여 요청
+    const postId = req.params.postId;
+
+    // 사용자가 이미 해당 게시글에 좋아요를 눌렀는지 확인
+    const checkLikeSql =
+        "SELECT * FROM likes WHERE user_id = ? AND post_id = ?";
+    db.query(checkLikeSql, [userId, postId], (err, results) => {
+        console.log("results", results);
+        if (err) return res.status(500).json({ error: "Database error" });
+
+        if (results.length > 0) {
+            // 이미 좋아요를 누른 경우
+            return res
+                .status(400)
+                .json({ message: "You have already liked this post." });
+        } else {
+            // 좋아요 기록이 없을 경우 삽입
+            const insertLikeSql =
+                "INSERT INTO likes (user_id, post_id) VALUES (?, ?)";
+            db.query(insertLikeSql, [userId, postId], (err, result) => {
+                if (err)
+                    return res.status(500).json({ error: "Database error" });
+
+                // 게시글의 좋아요 수 증가
+                const updatePostSql =
+                    "UPDATE posts SET likes = likes + 1 WHERE id = ?";
+                db.query(updatePostSql, [postId], (err, updateResult) => {
+                    if (err)
+                        return res
+                            .status(500)
+                            .json({ error: "Database error" });
+
+                    res.status(200).json({
+                        message: "Like added successfully.",
+                    });
+                });
+            });
+        }
+    });
+});
+
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });

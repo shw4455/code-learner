@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./styles/post.module.css";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import DeletePost from "./commponent/DeletePost.jsx";
+import { useAuth } from "./context/AuthContext"; // AuthContext에서 useAuth 훅 가져오기
 
 function timeDifference(isoString) {
     const moment = require("moment");
@@ -37,7 +38,7 @@ function Post() {
     const [commentContent, setCommentContent] = useState(""); // 댓글 입력 상태
     const [replyContent, setReplyContent] = useState(""); // 대댓글 입력 상태
     const [replyParentId, setReplyParentId] = useState(null); // 대댓글의 상위 댓글 ID
-
+    const { user } = useAuth(); // 로그인된 사용자 정보 가져오기
     useEffect(() => {
         // 게시글 데이터 가져오기
         fetch(`http://localhost:3001/api/posts/${postId}`)
@@ -51,6 +52,33 @@ function Post() {
             .then((data) => setComments(data)) // 댓글 목록 설정
             .catch((error) => console.log(error));
     }, [postId]);
+
+    // 좋아요 증가 함수
+    const handleLikeIncrement = async () => {
+        try {
+            const userId = user.id; // 로그인된 사용자 ID를 가져와야 함 (AuthContext 등에서 가져오기)
+            const response = await fetch(
+                `http://localhost:3001/api/posts/${postId}/like`,
+                {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ userId }),
+                }
+            );
+
+            if (response.ok) {
+                setData((prevData) => ({
+                    ...prevData,
+                    likes: prevData.likes + 1,
+                }));
+            } else {
+                const errorData = await response.json();
+                alert(errorData.message);
+            }
+        } catch (error) {
+            console.error("Error incrementing like count:", error);
+        }
+    };
 
     const handleCommentSubmit = async () => {
         if (!commentContent.trim()) {
@@ -159,14 +187,6 @@ function Post() {
                                 >
                                     삭제
                                 </button>
-                                {/* 무한 대댓글 기능, 활성화시 대댓글에도 추가 대댓글 가능 */}
-                                {/* <button
-                                    className={styles.dataManagementLink}
-                                    onClick={() => setReplyParentId(comment.id)} // 대댓글 작성 활성화
-                                >
-                                    답글
-                                </button> */}
-                                {/* 첫 번째 레벨의 댓글에만 대댓글 작성 버튼 표시 */}
                                 {parentId === null && (
                                     <button
                                         className={styles.dataManagementLink}
@@ -182,7 +202,6 @@ function Post() {
                         <div className={styles.commentContentsWrapper}>
                             {comment.content}
                         </div>
-                        {/* 대댓글 작성 폼 */}
                         {replyParentId === comment.id && (
                             <div className={styles.replyContainer}>
                                 <textarea
@@ -203,7 +222,6 @@ function Post() {
                                 </button>
                             </div>
                         )}
-                        {/* 대댓글 재귀 렌더링 */}
                         <div>{renderComments(comment.id)}</div>
                     </div>
                 </div>
@@ -251,10 +269,18 @@ function Post() {
                             <Link className={styles.private}>비공개</Link>
                         </div>
                         <div>
-                            좋아요 수:
-                            {data?.likes === 0
-                                ? " 0"
-                                : data?.likes || " no data"}
+                            <button
+                                className={styles.likeButton}
+                                onClick={handleLikeIncrement}
+                            >
+                                👍 좋아요
+                            </button>
+                            <span>
+                                좋아요 수:{" "}
+                                {data?.likes === 0
+                                    ? " 0"
+                                    : data?.likes || " no data"}
+                            </span>
                         </div>
                     </div>
                 </div>
