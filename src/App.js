@@ -16,24 +16,33 @@ import CreatePost from "./createPost";
 import UpdatePost from "./updatePost";
 import TestPage from "./testPage";
 
+import { AuthProvider } from "./context/AuthContext";
+import ProtectedPage from "./commponent/ProtectedPage";
+
 function App() {
     return (
-        <HashRouter>
-            <Header />
-            <Routes>
-                <Route path="/" element={<Main />} />
-                <Route path="/check" element={<Check />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/notFound" element={<NotFound />} />
-                <Route path="/board" element={<Main />} />
-                <Route path="/board/post/:postId" element={<Post />} />
-                <Route path="/board/create" element={<CreatePost />} />
-                <Route path="/board/update/:postId" element={<UpdatePost />} />
-                <Route path="/testPage" element={<TestPage></TestPage>} />
-                <Route path="/*" element={<NotFound />} />
-            </Routes>
-            <Footer />
-        </HashRouter>
+        <AuthProvider>
+            <HashRouter>
+                <Header />
+                <Routes>
+                    <Route path="/" element={<Main />} />
+                    <Route path="/check" element={<Check />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/notFound" element={<NotFound />} />
+                    <Route path="/board" element={<Main />} />
+                    <Route path="/board/post/:postId" element={<Post />} />
+                    <Route path="/board/create" element={<CreatePost />} />
+                    <Route
+                        path="/board/update/:postId"
+                        element={<UpdatePost />}
+                    />
+                    <Route path="/testPage" element={<TestPage></TestPage>} />
+                    <Route path="/protected" element={<ProtectedPage />} />
+                    <Route path="/*" element={<NotFound />} />
+                </Routes>
+                <Footer />
+            </HashRouter>
+        </AuthProvider>
     );
 }
 

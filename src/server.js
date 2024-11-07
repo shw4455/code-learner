@@ -61,28 +61,58 @@ app.post("/api/register", async (req, res) => {
         }
     );
 });
-
 // 로그인 API
 app.post("/api/login", (req, res) => {
     const { email, password } = req.body;
 
-    const sql = "SELECT * FROM users WHERE email = ?";
-    db.query(sql, [email], async (err, results) => {
-        if (err) return res.status(500).json({ error: "Database error" });
-        if (results.length === 0)
-            return res.status(401).json({ error: "User not found" });
+    db.query(
+        "SELECT * FROM users WHERE email = ?",
+        [email],
+        async (err, results) => {
+            if (err) return res.status(500).json({ error: "Database error" });
+            if (results.length === 0)
+                return res.status(401).json({ error: "User not found" });
 
-        const user = results[0];
-        const passwordMatch = await bcrypt.compare(password, user.password);
+            const user = results[0];
+            const isMatch = await bcrypt.compare(password, user.password);
 
-        if (!passwordMatch)
-            return res.status(401).json({ error: "Invalid credentials" });
+            if (!isMatch)
+                return res.status(401).json({ error: "Invalid credentials" });
 
-        const token = jwt.sign({ id: user.id }, JWT_SECRET, {
-            expiresIn: "1h",
-        });
-        res.json({ token });
-    });
+            const token = jwt.sign(
+                { id: user.id, username: user.username },
+                JWT_SECRET,
+                { expiresIn: "1h" }
+            );
+            res.json({
+                token,
+                user: {
+                    id: user.id,
+                    username: user.username,
+                    email: user.email,
+                },
+            });
+        }
+    );
+});
+
+const verifyToken = (req, res, next) => {
+    const token = req.headers["authorization"]?.split(" ")[1]; // Bearer 토큰 형식: "Bearer <token>"
+    if (!token)
+        return res.status(403).json({ error: "Access denied, token missing!" });
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        req.user = decoded;
+        next();
+    } catch (err) {
+        res.status(401).json({ error: "Invalid token" });
+    }
+};
+
+// 인증이 필요한 API 예시
+app.get("/api/protected", verifyToken, (req, res) => {
+    res.json({ message: "This is protected data", user: req.user });
 });
 
 // board 데이터 가져오기 API
