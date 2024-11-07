@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 
 function Board() {
     const [searchTerm, setSearchTerm] = useState("");
+    const [postsPerPage, setPostsPerPage] = useState(10); // 기본 게시글 수
+    const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
 
     const majors = [
         { id: "웹" },
@@ -29,6 +31,21 @@ function Board() {
         }
     };
 
+    const handlePostsPerPageChange = (event) => {
+        setPostsPerPage(parseInt(event.target.value));
+        setCurrentPage(1); // 게시글 수를 변경할 때 페이지를 첫 번째로 리셋
+    };
+
+    const handleNextPage = () => {
+        setCurrentPage((prev) => prev + 1);
+    };
+
+    const handlePreviousPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage((prev) => prev - 1);
+        }
+    };
+
     return (
         <div id={styles.container}>
             <div id={styles.tagContainer}>
@@ -45,6 +62,15 @@ function Board() {
                 ))}
             </div>
             <div id={styles.elementContainer}>
+                <select
+                    className={styles.postsPerPageSelect}
+                    value={postsPerPage}
+                    onChange={handlePostsPerPageChange}
+                >
+                    <option value={10}>10개</option>
+                    <option value={20}>20개</option>
+                    <option value={30}>30개</option>
+                </select>
                 <button className={styles.smallButton}>
                     <i className="material-icons">swap_vert</i>
                     <div>최신순</div>
@@ -70,15 +96,27 @@ function Board() {
                     />
                 </div>
                 <div id={styles.pageContainer}>
-                    <i className="material-icons">chevron_left</i>
-                    <div className={styles.pageNumber}>1/100 페이지</div>
-                    <i className="material-icons">chevron_right</i>
+                    <button
+                        onClick={handlePreviousPage}
+                        disabled={currentPage === 1}
+                    >
+                        <i className="material-icons">chevron_left</i>
+                    </button>
+                    <div className={styles.pageNumber}>
+                        {currentPage} 페이지
+                    </div>
+                    <button onClick={handleNextPage}>
+                        <i className="material-icons">chevron_right</i>
+                    </button>
                 </div>
                 <Link to="/board/create" className={styles.smallButton}>
                     작성하기
                 </Link>
             </div>
-            <NoticeBoard></NoticeBoard>
+            <NoticeBoard
+                postsPerPage={postsPerPage}
+                currentPage={currentPage}
+            />
         </div>
     );
 }
