@@ -121,6 +121,10 @@
     height: 100px;
 }
 
+#login {
+    display: flex;
+}
+
 /* 로그인 버튼 */
 #signIn {
     background-color: var(--element-color-gray);

@@ -1,9 +1,11 @@
-import { React, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "./context/AuthContext"; // AuthContext에서 useAuth 훅 가져오기
 import header from "./styles/header.module.css";
 
 function Header() {
     // Data for menu items and themes
+    const { user, logout } = useAuth(); // user 값과 logout 함수 가져오기
     const menuItems = [
         { label: "게시판", to: "/board" },
         { label: "체크", to: "check" },
@@ -152,23 +154,33 @@ function Header() {
                             />
                         </div>
 
-                        {/* onClick 이벤트 핸들러를 할당하지만 사용하지 않습니다. */}
+                        {/* user 값에 따라 동적으로 렌더링 */}
+                        <div id={header.login}>
+                            {user ? (
+                                <>
+                                    <span>{user.username}님 안녕하세요</span>
+                                    <button onClick={logout}>로그아웃</button>
+                                </>
+                            ) : (
+                                <>
+                                    <Link
+                                        id={header.signIn}
+                                        className={`${header.button} ${header.listElement}`}
+                                        to="/login"
+                                    >
+                                        <div>로그인</div>
+                                    </Link>
+                                    <Link
+                                        id={header.signUp}
+                                        className={`${header.button} ${header.listElement}`}
+                                        to="/register"
+                                    >
+                                        <div>회원가입</div>
+                                    </Link>
+                                </>
+                            )}
+                        </div>
 
-                        <Link
-                            id={header.signIn}
-                            className={`${header.button} ${header.listElement}`}
-                            to="/login"
-                        >
-                            <div>로그인</div>
-                        </Link>
-
-                        <Link
-                            id={header.signUp}
-                            className={`${header.button} ${header.listElement}`}
-                            to="/"
-                        >
-                            <div>회원가입</div>
-                        </Link>
                         <span className={header.themaBtn}>
                             <input
                                 id="switch"
