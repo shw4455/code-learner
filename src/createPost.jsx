@@ -4,14 +4,16 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import DeletePost from "./commponent/DeletePost.jsx";
 import axios from "axios";
 import Button from "./commponent/Button.jsx";
+import { useAuth } from "./context/AuthContext"; // AuthContext에서 useAuth 훅 가져오기
 
 function CreatePost() {
     const { postId } = useParams();
+    const { user } = useAuth(); // 로그인된 사용자 정보 가져오기
 
     const [post, setPost] = useState({
         title: "",
         content: "",
-        user_id: "1",
+        user_id: user ? user.id : "", // user_id 초기값을 로그인된 사용자 ID로 설정
     });
     const [error, setError] = useState(false); // ?
     const navigate = useNavigate(); // ?
@@ -38,9 +40,10 @@ function CreatePost() {
         try {
             await axios
                 .post("http://localhost:3001/api/post", post)
-                .then(navigate("/"));
+                .then(() => navigate("/"));
         } catch (err) {
             console.log(err);
+            setError(true); // 에러 상태 업데이트
         }
     };
 
