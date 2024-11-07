@@ -287,6 +287,17 @@ app.get("/api/posts/:postId/comments", (req, res) => {
         res.json(results);
     });
 });
+// 조회수 증가 API
+app.put("/api/posts/:postId/view", (req, res) => {
+    const postId = req.params.postId;
+
+    const sql = "UPDATE posts SET views = views + 1 WHERE id = ?";
+    db.query(sql, [postId], (err, result) => {
+        if (err) return res.status(500).json({ error: "Database error" });
+        res.status(200).json({ message: "View count updated successfully" });
+    });
+});
+
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });

@@ -89,12 +89,15 @@ body 컴포넌트의 위에 header height만큼 margin-top을 주는 것
 [] 문서화란?
 [] 로그인 방식 React Context + Local Storage으로 구현
 [] JWT 인증
-    서버 측 미들웨어 방식
-    클라이언트 측에서 Context 사용 방식
-    장단점, 언제 무엇을?
+서버 측 미들웨어 방식
+클라이언트 측에서 Context 사용 방식
+장단점, 언제 무엇을?
 
 [] JSON Web token?
 [] bcypt
+[] server.js를 건드려야 될줄 알았는데
+그게 아니었던 것에 관하여
+
 ### 문제
 
 [x] 리액트에서 선언하지 않은 CSS가 적용이 된다

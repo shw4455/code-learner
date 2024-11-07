@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import moment from "moment";
+import axios from "axios";
 
 function timeDifference(isoString) {
     const targetTime = moment(isoString);
@@ -41,6 +42,18 @@ function App({ postsPerPage = 10, currentPage = 1 }) {
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
     const currentPosts = data.slice(indexOfFirstPost, indexOfLastPost);
 
+    // 조회수 증가 핸들러 함수
+    const handleViewIncrement = (postId) => {
+        axios
+            .put(`http://localhost:3001/api/posts/${postId}/view`)
+            .then(() =>
+                console.log(`View count incremented for post ${postId}`)
+            )
+            .catch((error) =>
+                console.error("Error incrementing view count:", error)
+            );
+    };
+
     return (
         <div>
             <div>
@@ -60,7 +73,12 @@ function App({ postsPerPage = 10, currentPage = 1 }) {
                             <tr key={item.id}>
                                 <td>{item.id}</td>
                                 <td>
-                                    <Link to={`/board/post/${item.id}`}>
+                                    <Link
+                                        to={`/board/post/${item.id}`}
+                                        onClick={() =>
+                                            handleViewIncrement(item.id)
+                                        }
+                                    >
                                         {item.title}
                                     </Link>
                                 </td>
