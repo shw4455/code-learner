@@ -117,9 +117,10 @@ app.get("/api/protected", verifyToken, (req, res) => {
 
 // board 데이터 가져오기 API
 app.get("/api/posts", (req, res) => {
-    db.query("SELECT * FROM posts", (err, results) => {
+    db.query("SELECT * FROM posts ORDER BY created_at DESC", (err, results) => {
         if (err) throw err;
         res.send(results);
+        console.log("result", result);
     });
 });
 
@@ -205,38 +206,61 @@ app.post("/api/post", (req, res) => {
 // 글 업데이트
 app.put("/api/post/:postId", (req, res) => {
     const postId = req.params.postId;
-    console.log("postId", postId);
+    const { userId, title, content } = req.body; // 클라이언트에서 전송된 사용자 ID 가져오기
 
-    const q = "UPDATE posts SET title = ?, content = ? WHERE id = ?";
-    const values = [req.body.title, req.body.content, postId];
-
-    console.log("values", values);
-
-    db.query(q, values, (err, data) => {
-        if (err) return res.status(500).json(err);
-        if (data.affectedRows === 0)
+    // 글 작성자 ID 확인 쿼리
+    const getPostSql = "SELECT user_id FROM posts WHERE id = ?";
+    db.query(getPostSql, [postId], (err, results) => {
+        if (err) return res.status(500).json({ error: "Database error" });
+        if (results.length === 0) {
             return res.status(404).json({ message: "Post not found" });
+        }
 
-        res.json({ message: "Post updated successfully" });
+        const postOwnerId = results[0].user_id;
+        if (postOwnerId !== userId) {
+            // 글 작성자가 아닌 경우
+            return res.status(403).json({
+                message: "You are not authorized to update this post.",
+            });
+        }
+
+        // 글 업데이트 쿼리
+        const updateSql =
+            "UPDATE posts SET title = ?, content = ? WHERE id = ?";
+        db.query(updateSql, [title, content, postId], (err, data) => {
+            if (err) return res.status(500).json({ error: "Database error" });
+            res.json({ message: "Post updated successfully" });
+        });
     });
-
-    console.log("PUT 요청이 들어왔습니다:", req.body);
 });
 
 // 글 삭제
 app.delete("/api/post/:postId", (req, res) => {
     const postId = req.params.postId;
-    console.log("DELETE 요청이 들어왔습니다: ", postId);
+    const { userId } = req.body; // 클라이언트에서 전송된 사용자 ID 가져오기
 
-    const q = "DELETE FROM posts WHERE id = ?";
-    const values = [postId];
-
-    db.query(q, values, (err, data) => {
-        if (err) return res.status(500).json(err);
-        if (data.affectedRows === 0)
+    // 글 작성자 ID 확인 쿼리
+    const getPostSql = "SELECT user_id FROM posts WHERE id = ?";
+    db.query(getPostSql, [postId], (err, results) => {
+        if (err) return res.status(500).json({ error: "Database error" });
+        if (results.length === 0) {
             return res.status(404).json({ message: "Post not found" });
+        }
 
-        res.json({ message: "Post deleted successfully" });
+        const postOwnerId = results[0].user_id;
+        if (postOwnerId !== userId) {
+            // 작성자가 아닌 경우
+            return res.status(403).json({
+                message: "You are not authorized to delete this post.",
+            });
+        }
+
+        // 작성자가 맞으면 삭제 진행
+        const deleteSql = "DELETE FROM posts WHERE id = ?";
+        db.query(deleteSql, [postId], (err, data) => {
+            if (err) return res.status(500).json({ error: "Database error" });
+            res.json({ message: "Post deleted successfully" });
+        });
     });
 });
 

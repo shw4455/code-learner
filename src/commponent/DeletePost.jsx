@@ -1,19 +1,32 @@
 import axios from "axios";
-import React, { useEffect } from "react";
-import { useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./styles/deletePost.module.css";
+import { useAuth } from "../context/AuthContext"; // AuthContext에서 로그인된 사용자 가져오기
 
 const DeletePost = (props) => {
     const navigate = useNavigate();
+    const { user } = useAuth(); // 현재 로그인한 사용자 정보 가져오기
 
-    const onConfirm = async (e) => {
+    const onConfirm = async () => {
+        if (!user) {
+            alert("You must be logged in to delete this post.");
+            return;
+        }
+
         try {
-            await axios
-                .delete(`http://localhost:3001/api/post/${props.postId}`)
-                .then(navigate("/"));
+            await axios.delete(
+                `http://localhost:3001/api/post/${props.postId}`,
+                {
+                    data: { userId: user.id }, // userId를 함께 전송
+                }
+            );
+            navigate("/");
         } catch (err) {
             console.log(err);
+            if (err.response && err.response.data.message) {
+                alert(err.response.data.message);
+            }
         }
     };
 
