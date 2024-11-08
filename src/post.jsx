@@ -285,7 +285,7 @@ function Post() {
                     </div>
                 </div>
                 <div id={styles.postContentContainer}>
-                    <div>{data?.content || "no content available"}</div>
+                    <pre>{data?.content || "no content available"}</pre>
                 </div>
                 <hr />
                 <div id={styles.writeCommentContainer}>
