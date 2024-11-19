@@ -39,6 +39,7 @@ function Post() {
     const [replyContent, setReplyContent] = useState(""); // 대댓글 입력 상태
     const [replyParentId, setReplyParentId] = useState(null); // 대댓글의 상위 댓글 ID
     const { user } = useAuth(); // 로그인된 사용자 정보 가져오기
+    // 게시글, 댓글 데이터 가져오기
     useEffect(() => {
         // 게시글 데이터 가져오기
         fetch(`http://localhost:3001/api/posts/${postId}`)
@@ -61,6 +62,7 @@ function Post() {
                 `http://localhost:3001/api/posts/${postId}/like`,
                 {
                     method: "PUT",
+                    // JSON 타입임을 명시, 타입을 변환해주진 않음, 변환해서 보내줘야함, 받는 서버도 마찬가지
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ userId }),
                 }
@@ -80,13 +82,15 @@ function Post() {
         }
     };
 
+    // 댓글, 대댓글 작성
     const handleCommentSubmit = async () => {
+        // trim() -> 공백제거
         if (!commentContent.trim()) {
             alert("댓글 내용을 입력하세요.");
             return;
         }
         try {
-            const writer_id = 1; // 실제 앱에서는 인증된 사용자 ID로 설정
+            const writer_id = 1; // ● 실제 앱에서는 인증된 사용자 ID로 설정
             await fetch(`http://localhost:3001/api/posts/${postId}/comments`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -187,6 +191,7 @@ function Post() {
                                 >
                                     삭제
                                 </button>
+                                {/* 무한 대댓글 기능, 조건 삭제시 대댓글에도 대댓글 가능 */}
                                 {parentId === null && (
                                     <button
                                         className={styles.dataManagementLink}

@@ -11,7 +11,7 @@ function timeDifference(isoString) {
     const units = {
         년: duration.years(),
         개월: duration.months(),
-        주: Math.floor(duration.asWeeks()), // 주 단위 계산
+        주: duration.weeks(),
         일: duration.days(),
         시간: duration.hours(),
         분: duration.minutes(),

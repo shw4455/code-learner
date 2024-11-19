@@ -81,7 +81,7 @@ app.post("/api/login", (req, res) => {
 
             const token = jwt.sign(
                 { id: user.id, username: user.username },
-                JWT_SECRET,
+                JWT_SECRET, // 추가적인 처리 필요, 환경변수로 설정
                 { expiresIn: "1h" }
             );
             res.json({
@@ -120,7 +120,6 @@ app.get("/api/posts", (req, res) => {
     db.query("SELECT * FROM posts ORDER BY created_at DESC", (err, results) => {
         if (err) throw err;
         res.send(results);
-        console.log("result", result);
     });
 });
 
@@ -278,7 +277,7 @@ app.delete("/api/comments/:commentId", (req, res) => {
         res.json({ message: "Comment deleted successfully" });
     });
 });
-// 대댓글 작성
+//  댓글과 대댓글 작성
 app.post("/api/posts/:postId/comments", (req, res) => {
     console.log("대댓글 요청이 들어왔습니다");
     const { postId } = req.params;
@@ -303,7 +302,7 @@ app.get("/api/posts/:postId/comments", (req, res) => {
         SELECT * 
         FROM comments 
         WHERE post_id = ? 
-        ORDER BY COALESCE(parent_id, id), created_at
+        -- ORDER BY COALESCE(parent_id, id), created_at
     `;
 
     db.query(sql, [postId], (err, results) => {
@@ -311,6 +310,7 @@ app.get("/api/posts/:postId/comments", (req, res) => {
         res.json(results);
     });
 });
+
 // 조회수 증가 API
 app.put("/api/posts/:postId/view", (req, res) => {
     const postId = req.params.postId;
