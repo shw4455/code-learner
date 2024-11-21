@@ -117,9 +117,26 @@ app.get("/api/protected", verifyToken, (req, res) => {
 
 // board 데이터 가져오기 API
 app.get("/api/posts", (req, res) => {
-    db.query("SELECT * FROM posts ORDER BY created_at DESC", (err, results) => {
-        if (err) throw err;
-        res.send(results);
+    const query = `
+        SELECT 
+            posts.*, 
+            users.username 
+        FROM 
+            posts 
+        JOIN 
+            users 
+        ON 
+            posts.user_id = users.id 
+        ORDER BY 
+            posts.created_at DESC
+    `;
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send("An error occurred while fetching posts.");
+        } else {
+            res.send(results);
+        }
     });
 });
 

@@ -82,7 +82,8 @@ function App({ postsPerPage = 10, currentPage = 1 }) {
                                         {item.title}
                                     </Link>
                                 </td>
-                                <td>{item.author}</td>
+                                <td>{item.username}</td>
+                                {console.log(item.username)}
                                 <td>{timeDifference(item.created_at)}</td>
                                 <td>{item.views}</td>
                                 <td>{item.likes}</td>
