@@ -3,12 +3,28 @@ import styles from "./styles/board.module.css";
 import NoticeBoard from "./commponent/NoticeBoard.jsx";
 import { Link } from "react-router-dom";
 
-
 function Board() {
     const [posts, setPosts] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [postsPerPage, setPostsPerPage] = useState(10); // 기본 게시글 수
     const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+
+    const [tagInput, setTagInput] = useState(""); // 태그 입력 상태
+
+    const [error, setError] = useState(false);
+    const [post, setPost] = useState({
+        tags: [
+            "테스트",
+            "한국어입니다",
+            "한국어입니다한국어입니다",
+            "한국어입니다",
+            "한국어입니다한국어입니다",
+            "한국어입니다",
+            "한국어입니다한국어입니다",
+            "한국어입니다",
+            "한국어입니다한국어입니다",
+        ], // 태그 데이터 추가
+    });
 
     const majors = [
         { id: "웹" },
@@ -65,20 +81,78 @@ function Board() {
         }
     };
 
+    // 태그 추가
+    const handleTagAdd = () => {
+        if (!tagInput.trim()) return; // 빈 입력 방지
+        if (post.tags.length >= 10) {
+            setError("태그는 최대 10개까지 입력 가능합니다."); // 태그 개수 제한
+            return;
+        }
+        if (post.tags.includes(tagInput.trim())) {
+            setError("이미 추가된 태그입니다."); // 중복 태그 방지
+            return;
+        }
+        if (tagInput.trim()) {
+            setPost((prev) => ({
+                ...prev,
+                tags: [...prev.tags, tagInput.trim()],
+            }));
+            setTagInput(""); // 입력 필드 초기화
+            setError(""); // 에러 메시지 초기화
+            console.log("tagInput", tagInput);
+            console.log("typeof tagInput", typeof tagInput);
+        }
+    };
+
+    // 엔터 키로 태그 추가
+    const handleTagKeyDown = (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault(); // 기본 동작(폼 제출 등) 방지
+            handleTagAdd(); // 태그 추가 함수 호출
+        }
+    };
+
+    // 태그 삭제
+    const handleTagRemove = (tag) => {
+        setPost((prev) => ({
+            ...prev,
+            tags: prev.tags.filter((t) => t !== tag),
+        }));
+    };
     return (
         <div id={styles.container}>
-            <div id={styles.tagContainer}>
+            <div id={styles.tagWrapper}>
                 {/* 내가 처음에 작성했던 것 */}
                 {/* majors.map((majors) => (
           <button className={styles.tagButton}>{majors.id}</button>
         )) */}
 
                 {/* 수정된 코드, 보고 이해하고, 오답노트 */}
-                {majors.map((major) => (
-                    <button key={major.id} className={styles.tagButton}>
-                        #{major.id}
-                    </button>
-                ))}
+                <div id={styles.tagContainer}>
+                    <div id={styles.tagInputWrapper}>
+                        <div id={styles.tagInputContainer}>
+                            <input
+                                id={styles.tagInput}
+                                type="text"
+                                placeholder="태그를 입력하고 Enter를 누르세요"
+                                value={tagInput}
+                                onChange={(e) => setTagInput(e.target.value)}
+                                onKeyDown={handleTagKeyDown} // Enter 키로 태그 추가
+                            />
+                        </div>
+                    </div>
+                    <div id={styles.tagsWrapper}>
+                        {post.tags.map((tag, index) => (
+                            <span
+                                key={index}
+                                className={styles.tagButton}
+                                onClick={() => handleTagRemove(tag)}
+                            >
+                                {tag} ❌
+                            </span>
+                        ))}
+                    </div>
+                </div>
             </div>
             <div id={styles.elementContainer}>
                 <select

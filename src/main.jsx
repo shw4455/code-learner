@@ -14,7 +14,7 @@ function Main() {
             <div className={main.main}>
                 <Top></Top>
                 <div className={main.concentContainer}>
-                    <Left></Left>
+                    {/* <Left></Left> */}
                     <Board></Board>
                     <Right></Right>
                 </div>

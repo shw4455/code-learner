@@ -3,7 +3,7 @@
 /* container */
 #container {
     background-color: var(--element-color-gray);
-    width: 75%;
+    width: 90%;
 
     padding: 20px 40px 100px;
     /* 뭔가,, 있어야 보기 편해,, */
@@ -11,30 +11,63 @@
     padding-bottom: 100px;
 }
 
+#tagWrapper {
+    display: grid;
+    place-items: center;
+
+    margin-top: 1rem;
+}
+
 /* tag container */
 #tagContainer {
-    height: 100px;
+    width: 70%;
+    height: auto;
+    display: block;
+}
 
+#tagInputWrapper {
     display: flex;
-    align-items: center;
     justify-content: center;
+}
 
+#tagInputContainer {
+    display: flex;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--main-line-color);
+    padding: 10px;
+    width: 60%;
+    /* max-width: 500px; */
+}
+
+
+#tagInput {
+    width: 100%;
+}
+
+#tagsWrapper {
+    display: flex;
+    flex-wrap: wrap;
+
+    margin-top: 1rem;
 }
 
 /* tag button */
 .tagButton {
     --height: 40px;
-    display: block;
+
     width: auto;
     height: var(--height);
+    display: grid;
+    place-items: center;
 
     margin: 5px;
-    padding: 0px 10px;
+    padding: 0px 11px;
 
     border: none;
     border-radius: var(--height);
 
     text-align: center;
+
 
     color: var(--font-color);
     background-color: var(--element-color-blue);
@@ -52,6 +85,8 @@
 #elementContainer {
     display: flex;
     align-items: center;
+
+    margin-top: 2rem;
 
     justify-content: space-between;
 }
