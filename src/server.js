@@ -165,17 +165,43 @@ app.get("/api/posts/:postId/comments", (req, res) => {
     );
 });
 
+// 태그 작성
+app.post("/api/posts/:postId/tags", (req, res) => {
+    const postId = req.params.postId;
+    const { tags } = req.body;
+
+    console.log(
+        "태그 post 요청이 들어왔습니다:",
+        "postIds:",
+        postId,
+        "tags:",
+        tags
+    );
+
+    if (!tags || !Array.isArray(tags)) {
+        return res.status(400).json({ error: "Invalid tags data" });
+    }
+
+    // 태그 데이터 저장
+    const insertTags = tags.map((tag) => [postId, tag]); // ●
+    const sql = "INSERT INTO post_tags (post_id, tag_name) VALUES ?";
+
+    db.query(sql, [insertTags], (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: "Database error" });
+        }
+        res.status(200).json({ message: "Tags added successfully" });
+    });
+});
+
 // 태그 가져오기 API
 app.get("/api/posts/:postId/tags", (req, res) => {
     const postId = req.params.postId;
-    console.log("태그 목록 요청이 들어왔습니다:", postId);
+    console.log("태그 목록 요청이 들어왔습니다:", "postId", postId);
 
     // 태그 정보 가져오기
     db.query(
-        "SELECT t.tag_name " +
-            "FROM post_tags pt " +
-            "JOIN tags t ON pt.tag_id = t.id " +
-            "WHERE pt.post_id = ?",
+        "SELECT tag_name " + "FROM post_tags " + "WHERE post_id = ?",
         [postId],
         (err, tagResults) => {
             if (err) return res.status(500).json({ error: "Database error" });
@@ -186,7 +212,7 @@ app.get("/api/posts/:postId/tags", (req, res) => {
 
 // 글 작성
 app.post("/api/post", (req, res) => {
-    console.log("req.body", req.body);
+    console.log("글 post 요청이 들어왔습니다", "req.body", req.body);
 
     const q = "INSERT INTO posts (title, content, user_id) VALUES (?, ?, ?)";
     const values = [req.body.title, req.body.content, req.body.user_id];

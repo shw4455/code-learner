@@ -35,6 +35,7 @@ function Post() {
     const navigate = useNavigate();
     const [data, setData] = useState(null); // 게시글 데이터 상태
     const [comments, setComments] = useState([]); // 댓글 목록 상태
+    const [tags, setTags] = useState([]); // 댓글 목록 상태
     const [commentContent, setCommentContent] = useState(""); // 댓글 입력 상태
     const [replyContent, setReplyContent] = useState(""); // 대댓글 입력 상태
     const [replyParentId, setReplyParentId] = useState(null); // 대댓글의 상위 댓글 ID
@@ -51,6 +52,12 @@ function Post() {
         fetch(`http://localhost:3001/api/posts/${postId}/comments`)
             .then((response) => response.json())
             .then((data) => setComments(data)) // 댓글 목록 설정
+            .catch((error) => console.log(error));
+
+        // 태그 데이터 가져오기
+        fetch(`http://localhost:3001/api/posts/${postId}/tags`)
+            .then((response) => response.json())
+            .then((data) => setTags(data)) // 댓글 목록 설정
             .catch((error) => console.log(error));
     }, [postId]);
 
@@ -285,9 +292,16 @@ function Post() {
                                 {data?.likes === 0
                                     ? " 0"
                                     : data?.likes || " no data"}
-                            </span>
+                            </span>{" "}
                         </div>
                     </div>
+                </div>
+                <div id={styles.tagWrapper}>
+                    {tags.map((tag, index) => (
+                        <li key={index} className={styles.tag}>
+                            {tag.tag_name}
+                        </li>
+                    ))}
                 </div>
                 <div id={styles.postContentContainer}>
                     <pre>{data?.content || "no content available"}</pre>
