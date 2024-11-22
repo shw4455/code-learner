@@ -17,11 +17,16 @@ const db = mysql.createConnection({
     database: "code_learner_db",
 });
 
+// Promise Wrapper 사용
+const promiseDb = db.promise();
+
 // 데이터베이스 연결
 db.connect((err) => {
     if (err) throw err;
     console.log("MySQL Connected...");
 });
+
+
 
 // http://localhost:3000에서 온 요청만 허용하겠다, 기본적으로 보안상의 이유로 접근을 제한
 app.use(cors({ origin: "http://localhost:3000" }));
@@ -406,6 +411,45 @@ app.put("/api/posts/:postId/like", (req, res) => {
             });
         }
     });
+});
+
+// 검색 API 엔드포인트// 검색 API 엔드포인트
+app.get("/search", async (req, res) => {
+    const { query } = req.query;
+    console.log("검색 요청이 들어왔습니다");
+    console.log("query", query);
+
+    if (!query) {
+        return res.status(400).json({ error: "Query parameter is required." });
+    }
+
+    try {
+        // 1단계: 검색어로 해당하는 id 조회
+        const [idResults] = await promiseDb.query(
+            `SELECT id FROM posts WHERE title LIKE ?`,
+            [`%${query}%`]
+        );
+
+        if (idResults.length === 0) {
+            return res
+                .status(404)
+                .json({ message: "No matching posts found." });
+        }
+
+        // 2단계: 조회된 id를 기반으로 전체 데이터 가져오기
+        const ids = idResults.map((result) => result.id);
+        const placeholders = ids.map(() => "?").join(","); // ?, ?, ...
+        const [postResults] = await promiseDb.query(
+            `SELECT * FROM posts WHERE id IN (${placeholders})`,
+            ids
+        );
+
+        // 3단계: 결과 반환
+        res.json(postResults);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Database query failed" });
+    }
 });
 
 app.listen(port, () => {

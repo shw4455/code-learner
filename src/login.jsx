@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { useAuth } from "./context/AuthContext.js"; // AuthContext에서 useAuth 훅 가져오기
-import { useNavigate } from "react-router-dom"; // 페이지 이동을 위해 useNavigate 가져오기
+import { useAuth } from "./context/AuthContext.js";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
-    const { login } = useAuth(); // 로그인 함수 가져오기
-    const navigate = useNavigate(); // 페이지 이동 훅
+    const { login } = useAuth();
+    const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
@@ -19,8 +19,8 @@ function Login() {
             const data = await response.json();
 
             if (data.token) {
-                login(data.user, data.token); // 로그인 상태 업데이트
-                navigate("/protected"); // 인증된 페이지로 이동
+                login(data.user, data.token);
+                navigate("/protected");
                 alert("Login successful");
                 console.log(data.user);
             } else {
@@ -33,24 +33,72 @@ function Login() {
     };
 
     return (
-        <form onSubmit={handleLogin}>
-            <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="이메일"
-                required
-            />
-            <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="비밀번호"
-                required
-            />
-            <button type="submit">로그인</button>
-        </form>
+        <div style={styles.container}>
+            <form onSubmit={handleLogin} style={styles.form}>
+                <h2 style={styles.title}>로그인</h2>
+                <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="이메일"
+                    required
+                    style={styles.input}
+                />
+                <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="비밀번호"
+                    required
+                    style={styles.input}
+                />
+                <button type="submit" style={styles.button}>
+                    로그인
+                </button>
+            </form>
+        </div>
     );
 }
+
+const styles = {
+    container: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "400px",
+        backgroundColor: "#f5f5f5",
+    },
+    form: {
+        backgroundColor: "#ffffff",
+        padding: "30px",
+        borderRadius: "8px",
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+        textAlign: "center",
+        width: "300px",
+    },
+    title: {
+        marginBottom: "20px",
+        fontSize: "24px",
+        color: "#333333",
+    },
+    input: {
+        width: "100%",
+        padding: "10px",
+        margin: "10px 0",
+        border: "1px solid #cccccc",
+        borderRadius: "4px",
+        fontSize: "16px",
+    },
+    button: {
+        width: "100%",
+        padding: "10px",
+        backgroundColor: "#007bff",
+        color: "#ffffff",
+        border: "none",
+        borderRadius: "4px",
+        fontSize: "16px",
+        cursor: "pointer",
+    },
+};
 
 export default Login;
