@@ -2,6 +2,8 @@
 
 const fs = require("fs");
 const path = require("path");
+const paths = require("../config/paths");
+const resolveApp = paths.resolveApp; // resolveApp 함수 사용
 const webpack = require("webpack");
 const resolve = require("resolve");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -16,7 +18,6 @@ const WorkboxWebpackPlugin = require("workbox-webpack-plugin");
 const ModuleScopePlugin = require("react-dev-utils/ModuleScopePlugin");
 const getCSSModuleLocalIdent = require("react-dev-utils/getCSSModuleLocalIdent");
 const ESLintPlugin = require("eslint-webpack-plugin");
-const paths = require("./paths");
 const modules = require("./modules");
 const getClientEnvironment = require("./env");
 const ModuleNotFoundPlugin = require("react-dev-utils/ModuleNotFoundPlugin");
@@ -335,14 +336,17 @@ module.exports = function (webpackEnv) {
                 // To fix this, we prevent you from importing files out of src/ -- if you'd like to,
                 // please link the files into your node_modules/ and let module-resolution kick in.
                 // Make sure your source files are compiled, as they will not be processed in any way.
-                new ModuleScopePlugin(paths.appSrc, [
-                    paths.appPackageJson,
-                    reactRefreshRuntimeEntry,
-                    reactRefreshWebpackPluginRuntimeEntry,
-                    babelRuntimeEntry,
-                    babelRuntimeEntryHelpers,
-                    babelRuntimeRegenerator,
-                ]),
+                new ModuleScopePlugin(
+                    [paths.appSrc, paths.resolveApp("client")],
+                    [
+                        paths.appPackageJson,
+                        reactRefreshRuntimeEntry,
+                        reactRefreshWebpackPluginRuntimeEntry,
+                        babelRuntimeEntry,
+                        babelRuntimeEntryHelpers,
+                        babelRuntimeRegenerator,
+                    ]
+                ),
             ],
         },
         module: {
@@ -414,7 +418,7 @@ module.exports = function (webpackEnv) {
                         // The preset includes JSX, Flow, TypeScript, and some ESnext features.
                         {
                             test: /\.(js|mjs|jsx|ts|tsx)$/,
-                            include: paths.appSrc,
+                            include: [paths.appSrc, paths.resolveApp("client")], // client 폴더 추가
                             loader: require.resolve("babel-loader"),
                             options: {
                                 customize: require.resolve(

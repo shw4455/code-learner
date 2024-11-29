@@ -1,23 +1,23 @@
 // App.js
 import React, { useEffect, useState } from "react";
 import { HashRouter, Route, Routes } from "react-router-dom";
-import "./styles/normalize.css";
-import "./styles/global-styles.css";
-import "./styles/google-fonts.css";
+// import "./styles/normalize.css";
+// import "./styles/global-styles.css";
+// import "./styles/google-fonts.css";
 
-import Header from "./header";
-import Footer from "./footer";
-import Main from "./main";
-import Login from "./login";
-import Check from "./check";
-import NotFound from "./notFound";
-import Post from "./post";
-import CreatePost from "./createPost";
-import UpdatePost from "./updatePost";
-import TestPage from "./testPage";
+import Header from "../src/header";
+import Footer from "../src/footer";
+import Main from "../src/main";
+import Login from "../src/login";
+import Check from "../src/check";
+import NotFound from "../src/notFound";
+import Post from "../src/post";
+import CreatePost from "../src/createPost";
+import UpdatePost from "../src/updatePost";
+import TestPage from "../src/testPage";
 
-import { AuthProvider } from "./context/AuthContext";
-import ProtectedPage from "./commponent/ProtectedPage";
+import { AuthProvider } from "../src/context/AuthContext";
+import ProtectedPage from "../src/commponent/ProtectedPage";
 
 function App() {
     return (
