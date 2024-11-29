@@ -6,8 +6,8 @@ import "./src/styles/normalize.css";
 import "./src/styles/global-styles.css";
 import "./src/styles/google-fonts.css";
 
-import Header from "./src/pages/header";
-import Footer from "./src/pages/footer";
+import Header from "./src/commponent/header";
+import Footer from "./src/commponent/footer";
 import Main from "./src/pages/main";
 import Login from "./src/pages/login";
 import Check from "./src/pages/check";
