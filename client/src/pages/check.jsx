@@ -1,8 +1,8 @@
 import React from "react";
 import styles from "./check.module.css";
-import hatImage from "../img/hat.png";
+import hatImage from "../assets/img/hat.png";
 
-import sunglassImage from "../img/sunglass.png";
+import sunglassImage from "../assets/img/sunglass.png";
 import Checkcard from "../commponent/Checkcard";
 
 function Home() {

@@ -2,7 +2,7 @@ import React from "react";
 import right from "./right.module.css";
 
 function Right() {
-  const adImg = require("../img/advertisement_2.jpg");
+  const adImg = require("../assets/img/advertisement_2.jpg");
 
   return (
     <div id={right.right}>

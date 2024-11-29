@@ -3,13 +3,13 @@ import tag from "./tag.module.css";
 
 function Tag(props) {
   const languages = [
-    { id: "HTML", src: require("../img/HTML.png") },
-    { id: "CSS", src: require("../img/CSS.png") },
-    { id: "JavaScript", src: require("../img/JavaScript.png") },
-    { id: "React", src: require("../img/react.png") },
-    { id: "TEST1", src: require("../img/react.png") },
-    { id: "TEST2", src: require("../img/react.png") },
-    { id: "TEST3", src: require("../img/react.png") },
+    { id: "HTML", src: require("../assets/img/HTML.png") },
+    { id: "CSS", src: require("../assets/img/CSS.png") },
+    { id: "JavaScript", src: require("../assets/img/JavaScript.png") },
+    { id: "React", src: require("../assets/img/react.png") },
+    { id: "TEST1", src: require("../assets/img/react.png") },
+    { id: "TEST2", src: require("../assets/img/react.png") },
+    { id: "TEST3", src: require("../assets/img/react.png") },
 
     // 리액트 대신 다른걸 넣어도 되겠죠?
   ];
