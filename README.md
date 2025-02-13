@@ -13,6 +13,8 @@ npm install
 npm install express  
 npm install mysql2  
 npm install moment
+npm install bcryptjs
+npm install axios
 ```
 
 ### 이후 아래 경로 터미널에서 명령어를 실행합니다
