@@ -45,7 +45,7 @@ function Post() {
         // 게시글 데이터 가져오기
         fetch(`http://localhost:3001/api/posts/${postId}`)
             .then((response) => response.json())
-            .then((data) => setData(data.post)) // 게시글 데이터만 설정
+            .then((data) => setData(data)) // 게시글 데이터만 설정
             .catch((error) => console.log(error));
 
         // 댓글 데이터 가져오기
