@@ -236,9 +236,12 @@ app.get("/api/posts/:postId/tags", (req, res) => {
     const postId = req.params.postId;
     console.log("태그 목록 요청이 들어왔습니다:", "postId", postId);
 
-    // 태그 정보 가져오기
+    // post_tags와 tags 테이블 조인하여 tag_name 가져오기
     db.query(
-        "SELECT tag_name " + "FROM post_tags " + "WHERE post_id = ?",
+        `SELECT t.tag_name 
+         FROM post_tags pt 
+         JOIN tags t ON pt.tag_id = t.id 
+         WHERE pt.post_id = ?`,
         [postId],
         (err, tagResults) => {
             if (err) {
