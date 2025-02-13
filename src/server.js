@@ -226,8 +226,11 @@ app.get("/api/posts/:postId/tags", (req, res) => {
         "SELECT tag_name " + "FROM post_tags " + "WHERE post_id = ?",
         [postId],
         (err, tagResults) => {
-            if (err) return res.status(500).json({ error: "Database error" });
-            res.json(tagResults);
+            if (err) {
+                console.error("태그 조회 오류:", err);
+                return res.status(500).json({ error: "Database error" });
+            }
+            res.json(tagResults);  // 결과를 배열로 변환하여 응답
         }
     );
 });
@@ -240,6 +243,10 @@ app.post("/api/post", (req, res) => {
     const values = [req.body.title, req.body.content, req.body.user_id];
 
     db.query(q, values, (err, data) => {
+        if (err) {
+            console.error("Database error:", err); // 구체적인 에러 로그 출력
+            return res.status(500).json({ error: err.message });
+        }
         if (err) return res.status(500).json({ error: "Database error" });
         res.json({
             message: "Post created successfully",
