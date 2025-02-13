@@ -188,32 +188,47 @@ app.get("/api/posts/:postId/comments", (req, res) => {
 });
 
 // 태그 작성
-app.post("/api/posts/:postId/tags", (req, res) => {
+app.post("/api/posts/:postId/tags", async (req, res) => { // ●
     const postId = req.params.postId;
     const { tags } = req.body;
-
-    console.log(
-        "태그 post 요청이 들어왔습니다:",
-        "postIds:",
-        postId,
-        "tags:",
-        tags
-    );
 
     if (!tags || !Array.isArray(tags)) {
         return res.status(400).json({ error: "Invalid tags data" });
     }
 
-    // 태그 데이터 저장
-    const insertTags = tags.map((tag) => [postId, tag]); // ●
-    const sql = "INSERT INTO post_tags (post_id, tag_name) VALUES ?";
+    try {
+        for (const tagName of tags) {
+            // 1. 태그 존재 여부 확인
+            // 존재하면 해당 태그의 id를 가져옵니다
+            const [existingTag] = await promiseDb.query( // ●
+                "SELECT id FROM tags WHERE tag_name = ?",
+                [tagName]
+            );
 
-    db.query(sql, [insertTags], (err, result) => {
-        if (err) {
-            return res.status(500).json({ error: "Database error" });
+            let tagId;
+            if (existingTag.length > 0) {
+                tagId = existingTag[0].id;
+            } else {
+                // 2. 태그가 없으면 새로 삽입
+                const [insertResult] = await promiseDb.query(
+                    "INSERT INTO tags (tag_name) VALUES (?)",
+                    [tagName]
+                );
+                tagId = insertResult.insertId;
+            }
+
+            // 3. 게시글과 태그 연결
+            await promiseDb.query(
+                "INSERT INTO post_tags (post_id, tag_id) VALUES (?, ?)",
+                [postId, tagId]
+            );
         }
+
         res.status(200).json({ message: "Tags added successfully" });
-    });
+    } catch (err) {
+        console.error("태그 저장 오류:", err.message);
+        res.status(500).json({ error: "Database error", details: err.message });
+    }
 });
 
 // 태그 가져오기 API
