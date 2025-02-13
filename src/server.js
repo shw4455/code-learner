@@ -26,8 +26,6 @@ db.connect((err) => {
     console.log("MySQL Connected...");
 });
 
-
-
 // http://localhost:3000에서 온 요청만 허용하겠다, 기본적으로 보안상의 이유로 접근을 제한
 app.use(cors({ origin: "http://localhost:3000" }));
 
@@ -37,6 +35,8 @@ app.use(bodyParser.json());
 // 회원가입 API
 app.post("/api/register", async (req, res) => {
     const { username, email, password } = req.body;
+
+    console.log("회원가입 요청: ", { username, email, password });
 
     // 중복 사용자 및 이메일 확인
     db.query(
@@ -70,6 +70,9 @@ app.post("/api/register", async (req, res) => {
 app.post("/api/login", (req, res) => {
     const { email, password } = req.body;
 
+    console.log("로그인 요청: ", { email, password });
+
+    // 로그인 확인
     db.query(
         "SELECT * FROM users WHERE email = ?",
         [email],
@@ -101,6 +104,7 @@ app.post("/api/login", (req, res) => {
     );
 });
 
+// 토큰 인증
 const verifyToken = (req, res, next) => {
     const token = req.headers["authorization"]?.split(" ")[1]; // Bearer 토큰 형식: "Bearer <token>"
     if (!token)
@@ -122,6 +126,8 @@ app.get("/api/protected", verifyToken, (req, res) => {
 
 // board 데이터 가져오기 API
 app.get("/api/posts", (req, res) => {
+    console.log("board 게시글 get 요청이 들어왔습니다");
+
     const query = `
         SELECT 
             posts.*, 
@@ -145,10 +151,10 @@ app.get("/api/posts", (req, res) => {
     });
 });
 
-// 특정 게시글 데이터 가져오기 API
+// post 게시글 데이터 가져오기 API
 app.get("/api/posts/:postId", (req, res) => {
     const postId = req.params.postId;
-    console.log("get 요청이 들어왔습니다:", postId);
+    console.log("post 게시글 get 요청이 들어왔습니다 postId", postId);
 
     // 유저 및 게시글 정보 가져오기
     db.query(
@@ -170,7 +176,7 @@ app.get("/api/posts/:postId", (req, res) => {
 // 특정 게시글의 댓글 가져오기 API
 app.get("/api/posts/:postId/comments", (req, res) => {
     const postId = req.params.postId;
-    console.log("댓글 목록 요청이 들어왔습니다:", postId);
+    console.log("댓글 get 요청이 들어왔습니다 postId", postId);
 
     // 댓글 정보 가져오기
     db.query(
@@ -188,10 +194,14 @@ app.get("/api/posts/:postId/comments", (req, res) => {
 });
 
 // 태그 작성
-app.post("/api/posts/:postId/tags", async (req, res) => { // ●
+app.post("/api/posts/:postId/tags", async (req, res) => {
+    // ●
     const postId = req.params.postId;
     const { tags } = req.body;
 
+    console.log("tag 작성 post 요청이 들어왔습니다 tags", tags);
+
+    //
     if (!tags || !Array.isArray(tags)) {
         return res.status(400).json({ error: "Invalid tags data" });
     }
@@ -200,7 +210,8 @@ app.post("/api/posts/:postId/tags", async (req, res) => { // ●
         for (const tagName of tags) {
             // 1. 태그 존재 여부 확인
             // 존재하면 해당 태그의 id를 가져옵니다
-            const [existingTag] = await promiseDb.query( // ●
+            const [existingTag] = await promiseDb.query(
+                // ●
                 "SELECT id FROM tags WHERE tag_name = ?",
                 [tagName]
             );
@@ -234,7 +245,7 @@ app.post("/api/posts/:postId/tags", async (req, res) => { // ●
 // 태그 가져오기 API
 app.get("/api/posts/:postId/tags", (req, res) => {
     const postId = req.params.postId;
-    console.log("태그 목록 요청이 들어왔습니다:", "postId", postId);
+    console.log("태그 목록 요청이 들어왔습니다 postId", postId);
 
     // post_tags와 tags 테이블 조인하여 tag_name 가져오기
     db.query(
@@ -248,14 +259,14 @@ app.get("/api/posts/:postId/tags", (req, res) => {
                 console.error("태그 조회 오류:", err);
                 return res.status(500).json({ error: "Database error" });
             }
-            res.json(tagResults);  // 결과를 배열로 변환하여 응답
+            res.json(tagResults); // 결과를 배열로 변환하여 응답
         }
     );
 });
 
 // 글 작성
 app.post("/api/post", (req, res) => {
-    console.log("글 post 요청이 들어왔습니다", "req.body", req.body);
+    console.log("글 post 요청이 들어왔습니다 req.body", req.body);
 
     const q = "INSERT INTO posts (title, content, user_id) VALUES (?, ?, ?)";
     const values = [req.body.title, req.body.content, req.body.user_id];
@@ -271,14 +282,18 @@ app.post("/api/post", (req, res) => {
             postId: data.insertId,
         });
     });
-
-    console.log("post 요청이 들어왔습니다:");
 });
 
 // 글 업데이트
 app.put("/api/post/:postId", (req, res) => {
     const postId = req.params.postId;
     const { userId, title, content } = req.body; // 클라이언트에서 전송된 사용자 ID 가져오기
+    console.log(
+        "글 put 요청이 들어왔습니다 req.params.postId",
+        req.params.postId,
+        "req.body",
+        req.body
+    );
 
     // 글 작성자 ID 확인 쿼리
     const getPostSql = "SELECT user_id FROM posts WHERE id = ?";
@@ -310,6 +325,12 @@ app.put("/api/post/:postId", (req, res) => {
 app.delete("/api/post/:postId", (req, res) => {
     const postId = req.params.postId;
     const { userId } = req.body; // 클라이언트에서 전송된 사용자 ID 가져오기
+    console.log(
+        "글 delete 요청이 들어왔습니다 req.params.postId",
+        req.params.postId,
+        "req.body",
+        req.body
+    );
 
     // 글 작성자 ID 확인 쿼리
     const getPostSql = "SELECT user_id FROM posts WHERE id = ?";
@@ -338,7 +359,10 @@ app.delete("/api/post/:postId", (req, res) => {
 
 // 댓글 삭제 API
 app.delete("/api/comments/:commentId", (req, res) => {
-    console.log("댓글 삭제 요청이 들어왔습니다");
+    console.log(
+        "댓글 delete 요청이 들어왔습니다 req.params.commentId",
+        req.params.commentId
+    );
     const commentId = req.params.commentId;
 
     const sql = "DELETE FROM comments WHERE id = ?";
@@ -350,11 +374,16 @@ app.delete("/api/comments/:commentId", (req, res) => {
         res.json({ message: "Comment deleted successfully" });
     });
 });
-//  댓글과 대댓글 작성
+// 댓글과 대댓글 작성
 app.post("/api/posts/:postId/comments", (req, res) => {
-    console.log("대댓글 요청이 들어왔습니다");
     const { postId } = req.params;
     const { writer_id, content, parent_id } = req.body;
+    console.log(
+        "대댓글 post 요청이 들어왔습니다 req.params",
+        req.params,
+        "req.body",
+        req.body
+    );
 
     const sql = `
         INSERT INTO comments (post_id, writer_id, content, parent_id)
@@ -370,6 +399,7 @@ app.post("/api/posts/:postId/comments", (req, res) => {
 // 댓글과 대댓글을 함께 가져오는 API
 app.get("/api/posts/:postId/comments", (req, res) => {
     const { postId } = req.params;
+    console.log("댓글 get 요청이 들어왔습니다 req.params", req.params);
 
     const sql = `
         SELECT * 
@@ -387,6 +417,10 @@ app.get("/api/posts/:postId/comments", (req, res) => {
 // 조회수 증가 API
 app.put("/api/posts/:postId/view", (req, res) => {
     const postId = req.params.postId;
+    console.log(
+        "조회수 증가 put 요청이 들어왔습니다 req.params.postId",
+        req.params.postId
+    );
 
     const sql = "UPDATE posts SET views = views + 1 WHERE id = ?";
     db.query(sql, [postId], (err, result) => {
@@ -399,7 +433,10 @@ app.put("/api/posts/:postId/view", (req, res) => {
 app.put("/api/posts/:postId/like", (req, res) => {
     const { userId } = req.body; // 클라이언트에서 userId를 포함하여 요청
     const postId = req.params.postId;
-
+    console.log(
+        "좋아요 증가 put 요청이 들어왔습니다 req.params.postId",
+        req.params.postId
+    );
     // 사용자가 이미 해당 게시글에 좋아요를 눌렀는지 확인
     const checkLikeSql =
         "SELECT * FROM likes WHERE user_id = ? AND post_id = ?";
@@ -441,8 +478,7 @@ app.put("/api/posts/:postId/like", (req, res) => {
 // 검색 API 엔드포인트// 검색 API 엔드포인트
 app.get("/search", async (req, res) => {
     const { query } = req.query;
-    console.log("검색 요청이 들어왔습니다");
-    console.log("query", query);
+    console.log("검색 요청이 들어왔습니다 query", query);
 
     if (!query) {
         return res.status(400).json({ error: "Query parameter is required." });
