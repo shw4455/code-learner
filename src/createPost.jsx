@@ -114,6 +114,7 @@ function CreatePost() {
             navigate("/"); // 게시글 작성 후 이동
         } catch (err) {
             console.error("게시글 작성 중 오류 발생:", err);
+            console.log(err);
             setError("게시글 작성에 실패했습니다.");
         }
     };
