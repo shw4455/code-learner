@@ -150,6 +150,40 @@ app.get("/api/posts", (req, res) => {
         }
     });
 });
+app.get("/api/posts/tags", (req, res) => {
+    const tags = req.query.tags; // 🚨 `tag` 하나만 처리 가능 (배열이 아님)
+
+    console.log("board 키워드 게시글 get 요청이 들어왔습니다 req.query ", tags);
+    // 태그 개수 확인
+    const tagCount = tags.length;
+
+    // SQL 쿼리
+    const query = `
+    SELECT 
+        posts.*, 
+        users.username
+    FROM 
+        posts
+    JOIN users ON posts.user_id = users.id
+    JOIN post_tags ON posts.id = post_tags.post_id
+    JOIN tags ON post_tags.tag_id = tags.id
+    WHERE tags.tag_name IN (${tags.map(() => "?").join(", ")})
+    GROUP BY posts.id
+    HAVING COUNT(DISTINCT tags.id) = ?
+    ORDER BY posts.created_at DESC
+`;
+
+    db.query(query, [...tags, tagCount], (err, results) => {
+        if (err) {
+            console.error("태그 검색 중 오류 발생:", err);
+            return res
+                .status(500)
+                .send("An error occurred while fetching posts.");
+        }
+        res.json(results);
+        console.log(results);
+    });
+});
 
 // post 게시글 데이터 가져오기 API
 app.get("/api/posts/:postId", (req, res) => {

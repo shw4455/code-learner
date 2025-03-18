@@ -2,29 +2,19 @@ import React, { useEffect, useState } from "react";
 import styles from "./styles/board.module.css";
 import NoticeBoard from "./commponent/NoticeBoard.jsx";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 function Board() {
     const [posts, setPosts] = useState([]);
+    const [filteredPosts, setfilteredPosts] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
-    const [postsPerPage, setPostsPerPage] = useState(10); // 기본 게시글 수
+    const [postsPerPage, setPostsPerPage] = useState(1); // 기본 게시글 수
     const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
 
     const [tagInput, setTagInput] = useState(""); // 태그 입력 상태
 
     const [error, setError] = useState(false);
-    const [post, setPost] = useState({
-        tags: [
-            "테스트",
-            "한국어입니다",
-            "한국어입니다한국어입니다",
-            "한국어입니다",
-            "한국어입니다한국어입니다",
-            "한국어입니다",
-            "한국어입니다한국어입니다",
-            "한국어입니다",
-            "한국어입니다한국어입니다",
-        ], // 태그 데이터 추가
-    });
+    const [tags, setTags] = useState(["테그", "테그2"]);
 
     const majors = [
         { id: "웹" },
@@ -84,19 +74,16 @@ function Board() {
     // 태그 추가
     const handleTagAdd = () => {
         if (!tagInput.trim()) return; // 빈 입력 방지
-        if (post.tags.length >= 10) {
+        if (tags.length >= 10) {
             setError("태그는 최대 10개까지 입력 가능합니다."); // 태그 개수 제한
             return;
         }
-        if (post.tags.includes(tagInput.trim())) {
+        if (tags.includes(tagInput.trim())) {
             setError("이미 추가된 태그입니다."); // 중복 태그 방지
             return;
         }
         if (tagInput.trim()) {
-            setPost((prev) => ({
-                ...prev,
-                tags: [...prev.tags, tagInput.trim()],
-            }));
+            setTags([...tags, tagInput.trim()]);
             setTagInput(""); // 입력 필드 초기화
             setError(""); // 에러 메시지 초기화
             console.log("tagInput", tagInput);
@@ -105,19 +92,32 @@ function Board() {
     };
 
     // 엔터 키로 태그 추가
-    const handleTagKeyDown = (e) => {
+    const handleTagKeyDown = async (e) => {
         if (e.key === "Enter") {
             e.preventDefault(); // 기본 동작(폼 제출 등) 방지
             handleTagAdd(); // 태그 추가 함수 호출
+            // ● 태그 추가와 동시에 검색 요청에 대한 것도 넣을 생각
+
+            try {
+                const response = await axios.get(
+                    `http://localhost:3001/api/posts/tags`,
+                    {
+                        params: { tags: tags },
+                    }
+                );
+
+                console.log("검색 결과:", response.data);
+                setfilteredPosts(response.data); // 검색 결과를 posts 상태에 업데이트
+            } catch (error) {
+                console.error("검색 요청 실패:", error);
+                setError("검색 중 오류가 발생했습니다.");
+            }
         }
     };
 
     // 태그 삭제
     const handleTagRemove = (tag) => {
-        setPost((prev) => ({
-            ...prev,
-            tags: prev.tags.filter((t) => t !== tag),
-        }));
+        setTags(tags.filter((t) => t !== tag));
     };
     return (
         <div id={styles.container}>
@@ -142,7 +142,7 @@ function Board() {
                         </div>
                     </div>
                     <div id={styles.tagsWrapper}>
-                        {post.tags.map((tag, index) => (
+                        {tags.map((tag, index) => (
                             <span
                                 key={index}
                                 className={styles.tagButton}
@@ -210,6 +210,7 @@ function Board() {
             <NoticeBoard
                 postsPerPage={postsPerPage}
                 currentPage={currentPage}
+                filteredPosts={filteredPosts}
             />
         </div>
     );
