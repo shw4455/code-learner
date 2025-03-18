@@ -5,10 +5,10 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 function Board() {
-    const [posts, setPosts] = useState([]);
-    const [filteredPosts, setfilteredPosts] = useState([]);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [postsPerPage, setPostsPerPage] = useState(1); // 기본 게시글 수
+    const [posts, setPosts] = useState([]); // 전체 게시물
+    const [filteredPosts, setfilteredPosts] = useState([]); // 태그로 필터링 된 게시글
+    const [searchTerm, setSearchTerm] = useState(""); // ● ?
+    const [postsPerPage, setPostsPerPage] = useState(1); // 기본 게시글 수 ● 10에서 1로 바꿔둔 상태
     const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
 
     const [tagInput, setTagInput] = useState(""); // 태그 입력 상태
