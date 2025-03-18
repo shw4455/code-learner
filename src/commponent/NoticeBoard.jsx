@@ -27,17 +27,7 @@ function timeDifference(isoString) {
     return "방금 전";
 }
 
-function App({ filteredPosts, postsPerPage = 1, currentPage = 1 }) {
-    const [data, setData] = useState([]);
-    const currentData = filteredPosts.length > 0 ? filteredPosts : data;
-
-    useEffect(() => {
-        fetch("http://localhost:3001/api/posts")
-            .then((response) => response.json())
-            .then((data) => setData(data))
-            .catch((error) => console.log(error));
-    }, []);
-
+function App({ postsPerPage = 1, currentPage = 1, currentData }) {
     // 현재 페이지에 맞는 게시글 슬라이스
     const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
@@ -45,7 +35,7 @@ function App({ filteredPosts, postsPerPage = 1, currentPage = 1 }) {
 
     // 필터링 된 게시글
     {
-        console.log("필터링된 포스트", filteredPosts);
+        console.log("필터링된 포스트", currentPosts);
     }
 
     // 조회수 증가 핸들러 함수

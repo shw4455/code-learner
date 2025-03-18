@@ -30,6 +30,8 @@ function Board() {
             .catch((error) => console.log(error));
     }, []);
 
+    const currentData = filteredPosts.length > 0 ? filteredPosts : posts;
+
     // 현재 페이지에서 표시할 게시글 계산
     const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
@@ -197,7 +199,7 @@ function Board() {
                     </button>
                     <div className={styles.pageNumber}>
                         {currentPage} 페이지 /{" "}
-                        {Math.ceil(posts.length / postsPerPage)} 페이지
+                        {Math.ceil(currentData.length / postsPerPage)} 페이지
                     </div>
                     <button onClick={handleNextPage} disabled={!canGoNextPage}>
                         <i className="material-icons">chevron_right</i>
@@ -210,7 +212,7 @@ function Board() {
             <NoticeBoard
                 postsPerPage={postsPerPage}
                 currentPage={currentPage}
-                filteredPosts={filteredPosts}
+                currentData={currentData}
             />
         </div>
     );
