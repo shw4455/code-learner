@@ -110,6 +110,7 @@ function Board() {
 
                 console.log("검색 결과:", response.data);
                 setfilteredPosts(response.data); // 검색 결과를 posts 상태에 업데이트
+                setCurrentPage(1); // 페이지 초기화
             } catch (error) {
                 console.error("검색 요청 실패:", error);
                 setError("검색 중 오류가 발생했습니다.");
