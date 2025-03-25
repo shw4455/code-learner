@@ -81,15 +81,21 @@ function Board() {
     // 엔터 키로 태그 추가
     const handleTagKeyDown = async (e) => {
         if (e.key === "Enter") {
-            e.preventDefault(); // 기본 동작(폼 제출 등) 방지
-            handleTagAdd(); // 태그 추가 함수 호출
-            // ● 태그 추가와 동시에 검색 요청에 대한 것도 넣을 생각
+            e.preventDefault(); // 기본 동작 방지
+
+            const trimmed = tagInput.trim();
+            if (!trimmed || tags.includes(trimmed) || tags.length >= 10) return;
+
+            const newTags = [...tags, trimmed];
+            setTags(newTags); // 상태 업데이트
+            setTagInput(""); // 입력 초기화
+            setError("");
 
             try {
                 const response = await axios.get(
                     `http://localhost:3001/api/posts/tags`,
                     {
-                        params: { tags: tags },
+                        params: { tags: newTags }, // React의 상태 업데이트(setState)는 비동기적으로 동작하기 때문에 로컬 변수에 값을 넣고, 그걸로 set과 요청을 해준다
                     }
                 );
 
