@@ -7,7 +7,7 @@ import axios from "axios";
 function Board() {
     const [posts, setPosts] = useState([]); // 전체 게시물
     const [filteredPosts, setfilteredPosts] = useState([]); // 태그로 필터링 된 게시글
-    const [searchTerm, setSearchTerm] = useState(""); // ● ?
+
     const [postsPerPage, setPostsPerPage] = useState(1); // 기본 게시글 수 ● 10에서 1로 바꿔둔 상태
     const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
 
@@ -56,21 +56,6 @@ function Board() {
     const handlePostsPerPageChange = (event) => {
         setPostsPerPage(parseInt(event.target.value));
         setCurrentPage(1); // 게시글 수 변경 시 페이지를 첫 번째로 리셋
-    };
-
-    const handleButtonClick = () => {
-        console.log("search-button clicked");
-    };
-
-    const handleInputChange = (event) => {
-        setSearchTerm(event.target.value);
-        console.log("search-input : " + event.target.value);
-    };
-
-    const handleEnterPress = (event) => {
-        if (event.key === "Enter") {
-            console.log("search-input : Enter pressed");
-        }
     };
 
     // 태그 추가
@@ -172,25 +157,6 @@ function Board() {
                     <div>최신순</div>
                 </button>
 
-                <div className={styles.searchBar}>
-                    <button
-                        className={styles.searchButton}
-                        onClick={handleButtonClick}
-                    >
-                        <i className="material-symbols-outlined gf-search-1">
-                            search
-                        </i>
-                    </button>
-
-                    <input
-                        className={styles.searchInput}
-                        type="text"
-                        placeholder="태그 내 검색"
-                        value={searchTerm}
-                        onChange={handleInputChange}
-                        onKeyDown={handleEnterPress}
-                    />
-                </div>
                 <div id={styles.pageContainer}>
                     <button
                         onClick={handlePreviousPage}
