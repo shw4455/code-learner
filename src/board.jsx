@@ -58,23 +58,33 @@ function Board() {
         setCurrentPage(1); // 게시글 수 변경 시 페이지를 첫 번째로 리셋
     };
 
-    // 태그 추가
-    const handleTagAdd = () => {
-        if (!tagInput.trim()) return; // 빈 입력 방지
-        if (tags.length >= 10) {
-            setError("태그는 최대 10개까지 입력 가능합니다."); // 태그 개수 제한
-            return;
-        }
-        if (tags.includes(tagInput.trim())) {
-            setError("이미 추가된 태그입니다."); // 중복 태그 방지
-            return;
-        }
-        if (tagInput.trim()) {
-            setTags([...tags, tagInput.trim()]);
-            setTagInput(""); // 입력 필드 초기화
-            setError(""); // 에러 메시지 초기화
-            console.log("tagInput", tagInput);
-            console.log("typeof tagInput", typeof tagInput);
+    // 태그 수정
+    const handleTagUpdate = async (newTags) => {
+        setTags(newTags);
+        setTagInput("");
+        setError("");
+        setCurrentPage(1); // 페이지 초기화
+
+        try {
+            let response;
+
+            if (newTags.length < 1) {
+                response = await axios.get(`http://localhost:3001/api/posts`, {
+                    params: { tags: newTags }, // React의 상태 업데이트(setState)는 비동기적으로 동작하기 때문에 로컬 변수에 값을 넣고, 그걸로 set과 요청을 해준다
+                });
+            }
+            else {
+                response = await axios.get(
+                    `http://localhost:3001/api/posts/tags`,
+                    {
+                        params: { tags: newTags },
+                    }
+                );
+            }
+            setfilteredPosts(response.data); // 검색 결과를 posts 상태에 업데이트
+        } catch (error) {
+            console.error("검색 요청 실패:", error);
+            setError("검색 중 오류가 발생했습니다.");
         }
     };
 
@@ -87,48 +97,14 @@ function Board() {
             if (!trimmed || tags.includes(trimmed) || tags.length >= 10) return;
 
             const newTags = [...tags, trimmed];
-            setTags(newTags); // 상태 업데이트
-            setTagInput(""); // 입력 초기화
-            setError("");
-
-            try {
-                const response = await axios.get(
-                    `http://localhost:3001/api/posts/tags`,
-                    {
-                        params: { tags: newTags }, // React의 상태 업데이트(setState)는 비동기적으로 동작하기 때문에 로컬 변수에 값을 넣고, 그걸로 set과 요청을 해준다
-                    }
-                );
-
-                console.log("검색 결과:", response.data);
-                setfilteredPosts(response.data); // 검색 결과를 posts 상태에 업데이트
-                setCurrentPage(1); // 페이지 초기화
-            } catch (error) {
-                console.error("검색 요청 실패:", error);
-                setError("검색 중 오류가 발생했습니다.");
-            }
+            handleTagUpdate(newTags);
         }
     };
 
     // 태그 삭제
     const handleTagRemove = async (tag) => {
         const newTags = tags.filter((t) => t !== tag);
-        setTags(newTags);
-
-        try {
-            const response = await axios.get(
-                `http://localhost:3001/api/posts/tags`,
-                {
-                    params: { tags: newTags }, // React의 상태 업데이트(setState)는 비동기적으로 동작하기 때문에 로컬 변수에 값을 넣고, 그걸로 set과 요청을 해준다
-                }
-            );
-
-            console.log("검색 결과:", response.data);
-            setfilteredPosts(response.data); // 검색 결과를 posts 상태에 업데이트
-            setCurrentPage(1); // 페이지 초기화
-        } catch (error) {
-            console.error("검색 요청 실패:", error);
-            setError("검색 중 오류가 발생했습니다.");
-        }
+        handleTagUpdate(newTags);
     };
     return (
         <div id={styles.container}>
