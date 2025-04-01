@@ -2,38 +2,58 @@ import React, { useEffect, useState } from "react";
 import styles from "./styles/testPage.module.css";
 import axios from "axios";
 import { useAuth } from "./context/AuthContext.js";
-function myComments() {
-    const { user } = useAuth();
 
+function MyComments() {
+    const { user } = useAuth();
     const userId = user?.id;
 
-    const [MyPosts, setMyPosts] = useState([]); // 전체 댓글
+    const [myComments, setMyComments] = useState([]);
+
     useEffect(() => {
-        const fetchMyPosts = async () => {
-            if (!user) return; // 로그인 확인
+        const fetchMyComments = async () => {
+            if (!userId) return;
 
             try {
                 const response = await axios.get(
                     "http://localhost:3001/api/my-comments",
                     {
-                        params: { userId: user?.id },
+                        params: { userId: userId },
                     }
                 );
-                setMyPosts(response.data);
-                {
-                    console.log(response.data);
-                }
+                setMyComments(response.data);
             } catch (error) {
                 console.error("내 댓글 가져오기 실패", error);
             }
         };
-        fetchMyPosts();
-    }, [user]);
+
+        fetchMyComments();
+    }, [userId]);
+
     return (
         <div className={styles.container}>
-            {console.log("내 유저 아이디", userId)}
+            <h2>내가 작성한 댓글</h2>
+            <ul>
+                {myComments.map((comment) => (
+                    <li key={comment.id}>
+                        <p>
+                            <strong>작성자:</strong> {comment.username}
+                        </p>
+                        <p>
+                            <strong>게시글:</strong> {comment.post_title}
+                        </p>
+                        <p>
+                            <strong>내용:</strong> {comment.content}
+                        </p>
+                        <p>
+                            <strong>작성일:</strong>{" "}
+                            {new Date(comment.created_at).toLocaleString()}
+                        </p>
+                        <hr />
+                    </li>
+                ))}
+            </ul>
         </div>
     );
 }
 
-export default myComments;
+export default MyComments;
