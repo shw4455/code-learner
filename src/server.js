@@ -547,6 +547,49 @@ app.get("/search", async (req, res) => {
     }
 });
 
+// GET /api/my-posts?userId=3
+app.get("/api/my-posts", (req, res) => {
+    const userId = req.query.userId;
+    console.log("자기 개시글 요청 아이디 : ", userId);
+    const query = `
+        SELECT posts.*, users.username
+        FROM posts
+        JOIN users ON posts.user_id = users.id
+        WHERE posts.user_id = ?
+        ORDER BY posts.created_at DESC
+    `;
+
+    db.query(query, [userId], (err, results) => {
+        if (err) {
+            console.error("내 글 불러오기 오류:", err);
+            return res.status(500).send("서버 오류");
+        }
+        res.json(results);
+    });
+});
+
+// GET /api/my-comments?userId=3
+app.get("/api/my-comments", (req, res) => {
+    const userId = req.query.userId;
+
+    const query = `
+        SELECT c.*, u.username, p.title AS post_title
+        FROM comments c
+        JOIN users u ON c.writer_id = u.id
+        JOIN posts p ON c.post_id = p.id
+        WHERE c.writer_id = ?
+        ORDER BY c.created_at DESC
+    `;
+
+    db.query(query, [userId], (err, results) => {
+        if (err) {
+            console.error("내 댓글 불러오기 오류:", err);
+            return res.status(500).send("서버 오류");
+        }
+        res.json(results);
+    });
+});
+
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });

@@ -11,6 +11,8 @@ function Header() {
         { label: "체크", to: "check" },
         { label: "NotFound", to: "/notFound" },
         { label: "testPage", to: "/testPage" },
+        { label: "testPage2", to: "/testPage2" },
+        { label: "testPage3", to: "/testPage3" },
     ];
 
     const themaItems = [
