@@ -14,9 +14,9 @@ import NotFound from "./notFound";
 import Post from "./post";
 import CreatePost from "./createPost";
 import UpdatePost from "./updatePost";
-import TestPage from "./testPage";
-import myPosts from "./myPosts";
-import myComments from "./myComments";
+import TestPage1 from "./testPage1";
+import MyPosts from "./myPosts";
+import MyComments from "./myComments";
 
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedPage from "./commponent/ProtectedPage";
@@ -38,9 +38,9 @@ function App() {
                         path="/board/update/:postId"
                         element={<UpdatePost />}
                     />
-                    <Route path="/testPage" element={<TestPage></TestPage>} />
-                    <Route path="/testPage2" element={<myPosts></myPosts>} />
-                    <Route path="/testPage3" element={<myComments></myComments>} />
+                    <Route path="/testPage1" element={<TestPage1></TestPage1>} />
+                    <Route path="/testPage2" element={<MyPosts></MyPosts>} />
+                    <Route path="/testPage3" element={<MyComments></MyComments>} />
                     <Route path="/protected" element={<ProtectedPage />} />
                     <Route path="/*" element={<NotFound />} />
                 </Routes>

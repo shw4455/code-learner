@@ -4,12 +4,13 @@ import Login from "./login";
 import Register from "./register";
 import Search from "./search";
 
-function TestPage() {
+function TestPage1() {
     return (
         <div className={styles.container}>
             <Search></Search>
+            <Register></Register>
         </div>
     );
 }
 
-export default TestPage;
+export default TestPage1;

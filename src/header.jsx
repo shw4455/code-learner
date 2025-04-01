@@ -10,7 +10,7 @@ function Header() {
         { label: "게시판", to: "/board" },
         { label: "체크", to: "check" },
         { label: "NotFound", to: "/notFound" },
-        { label: "testPage", to: "/testPage" },
+        { label: "testPage1", to: "/testPage1" },
         { label: "testPage2", to: "/testPage2" },
         { label: "testPage3", to: "/testPage3" },
     ];
