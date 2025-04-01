@@ -33,11 +33,6 @@ function App({ postsPerPage = 1, currentPage = 1, currentData }) {
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
     const currentPosts = currentData.slice(indexOfFirstPost, indexOfLastPost);
 
-    // 필터링 된 게시글
-    {
-        console.log("필터링된 포스트", currentPosts);
-    }
-
     // 조회수 증가 핸들러 함수
     const handleViewIncrement = (postId) => {
         axios
@@ -79,7 +74,6 @@ function App({ postsPerPage = 1, currentPage = 1, currentData }) {
                                     </Link>
                                 </td>
                                 <td>{item.username}</td>
-                                {console.log(item.username)}
                                 <td>{timeDifference(item.created_at)}</td>
                                 <td>{item.views}</td>
                                 <td>{item.likes}</td>
