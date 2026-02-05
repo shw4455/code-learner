@@ -91,6 +91,13 @@ JWT_SECRET=your_secret_key
 
 ### 4) Run
 
+#### 데이터 입력
+
+mysql -u root -p
+USE code_learner_db;
+
+SOURCE docs/seed.sql;
+
 #### 서버 실행
 
 ```bash
