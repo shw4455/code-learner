@@ -75,19 +75,15 @@ cd ../server
 npm install
 ```
 
-### 3) Environment Variables (권장)
+## Environment Variables
 
-현재 서버 설정은 일부 코드에 하드코딩되어 있으나,
-실제 서비스 환경을 고려해 `.env` 분리를 권장합니다.
+### server
 
-```env
-PORT=3001
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=1234
-DB_NAME=code_learner_db
-JWT_SECRET=your_secret_key
-```
+- `server/.env.example` 참고하여 `.env` 생성
+
+### client
+
+- `client/.env.example` 참고하여 `.env` 생성
 
 ### 4) Run
 
