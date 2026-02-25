@@ -15,6 +15,7 @@ import Post from "./post";
 import CreatePost from "./createPost";
 import UpdatePost from "./updatePost";
 import TestPage from "./testPage";
+import TestPage2 from "./testPage2";
 import myPosts from "./myPosts";
 import myComments from "./myComments";
 
@@ -39,7 +40,7 @@ function App() {
                         element={<UpdatePost />}
                     />
                     <Route path="/testPage" element={<TestPage></TestPage>} />
-                    <Route path="/testPage2" element={<myPosts></myPosts>} />
+                    <Route path="/testPage2" element={<TestPage2></TestPage2>} />
                     <Route path="/testPage3" element={<myComments></myComments>} />
                     <Route path="/protected" element={<ProtectedPage />} />
                     <Route path="/*" element={<NotFound />} />
